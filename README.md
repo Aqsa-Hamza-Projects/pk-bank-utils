@@ -90,6 +90,23 @@ import {validateIBAN, getBankFromIBAN} from 'pk-bank-utils';
 
 ## API
 
+All exports come from the package root (`pk-bank-utils`).
+
+| Export              | Signature                                |
+| ------------------- | ---------------------------------------- |
+| `validateIBAN`      | `(iban: string) => IBANValidationResult` |
+| `parseIBAN`         | `(iban: string) => IBANValidationResult` |
+| `normalizeIBAN`     | `(iban: string) => string`               |
+| `formatIBAN`        | `(iban: string) => string`               |
+| `maskIBAN`          | `(iban: string) => string`               |
+| `maskAccountNumber` | `(accountNumber: string) => string`      |
+| `getBank`           | `(code: string) => Bank \| null`         |
+| `getBankFromIBAN`   | `(iban: string) => Bank \| null`         |
+| `searchBanks`       | `(query: string) => Bank[]`              |
+| `getBanks`          | `() => Bank[]`                           |
+
+Plus the exported types `IBANValidationResult` and `Bank`.
+
 ### `validateIBAN(iban: string): IBANValidationResult`
 
 Structural validation (length, country prefix, field character classes)
@@ -192,6 +209,24 @@ searchBanks('alfalah');
 Returns the full registry (a defensive copy — mutating the result doesn't
 affect the package's internal data).
 
+### `IBANValidationResult`
+
+| Field           | Type                  | Notes                                                       |
+| --------------- | --------------------- | ----------------------------------------------------------- |
+| `valid`         | `boolean`             | `true` only if structure and checksum both pass             |
+| `country`       | `'PK' \| undefined`   | Present once the IBAN is structurally well-formed           |
+| `checkDigits`   | `string \| undefined` | The 2-digit check portion                                   |
+| `bankCode`      | `string \| undefined` | The 4-letter bank code — present even on a checksum failure |
+| `accountNumber` | `string \| undefined` | The remaining 16 characters                                 |
+| `reason`        | `string \| undefined` | Present only when `valid: false`                            |
+
+### `Bank`
+
+| Field  | Type     | Notes                    |
+| ------ | -------- | ------------------------ |
+| `code` | `string` | 4-letter bank identifier |
+| `name` | `string` | Bank's display name      |
+
 ## Bank registry — accuracy disclaimer
 
 The bank-code directory (`getBank`, `getBankFromIBAN`, `searchBanks`,
@@ -212,6 +247,52 @@ welcome via a pull request against `src/data/banks.json`.
 - **Does not validate non-Pakistani IBANs.**
 - **Does not include SWIFT/BIC parsing, Raast identifiers, or phone-number
   utilities** in this release.
+
+## Examples
+
+Runnable scripts covering every public function live in
+[`examples/`](./examples) (not shipped in the npm tarball, but exercised by
+the test suite so they never rot):
+
+```bash
+npm run examples
+```
+
+| File                  | Shows                                                   |
+| --------------------- | ------------------------------------------------------- |
+| `01-validate-iban.ts` | `validateIBAN` / `parseIBAN` on valid and invalid IBANs |
+| `02-parse-iban.ts`    | Destructuring the parsed fields of a valid IBAN         |
+| `03-bank-lookup.ts`   | `getBankFromIBAN`, `getBank`, `searchBanks`, `getBanks` |
+| `04-masking.ts`       | `formatIBAN`, `maskIBAN`, `maskAccountNumber`           |
+| `05-commonjs.cjs`     | the CommonJS build via `require('pk-bank-utils')`       |
+| `06-esm.mjs`          | the ESM build via `import` in plain JavaScript          |
+
+## Changelog
+
+All notable changes are recorded in [CHANGELOG.md](./CHANGELOG.md),
+following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Contributing
+
+Issues and pull requests are welcome at the
+[GitHub repository](https://github.com/Aqsa-Hamza-Projects/pk-bank-utils).
+After cloning, enable the Git pre-commit hook once:
+
+```bash
+npm install
+npm run hooks:install
+```
+
+The local gate that must pass:
+
+```bash
+npm run typecheck && npm run lint && npm run format:check && npm run build && npm test && npm run examples
+```
+
+The most useful contribution is verifying and extending
+`src/data/banks.json` against an authoritative source (see the accuracy
+disclaimer above).
 
 ## License
 
