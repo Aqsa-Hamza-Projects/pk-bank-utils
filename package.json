@@ -1,0 +1,98 @@
+{
+  "name": "pk-bank-utils",
+  "version": "0.0.1",
+  "description": "Validate, parse, normalize, format and mask Pakistani IBANs, with a hand-curated bank-code directory. Zero-dependency TypeScript toolkit for Pakistani fintech, wallets, payroll, e-commerce and banking dashboards.",
+  "keywords": [
+    "pakistan",
+    "pakistani",
+    "iban",
+    "iban-validation",
+    "iban-parser",
+    "iban-validator",
+    "bank",
+    "banking",
+    "bank-code",
+    "pk-iban",
+    "mod97",
+    "checksum",
+    "fintech",
+    "payments",
+    "wallet",
+    "payroll",
+    "ecommerce",
+    "e-commerce",
+    "accounting",
+    "typescript",
+    "hbl",
+    "ubl",
+    "mcb",
+    "meezan"
+  ],
+  "author": "Aqsa LogicByte",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "examples": "npm run build && tsx examples/01-validate-iban.ts && tsx examples/02-parse-iban.ts && tsx examples/03-bank-lookup.ts && tsx examples/04-masking.ts && node examples/05-commonjs.cjs && node examples/06-esm.mjs",
+    "hooks:install": "husky",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run format:check && npm run build && npm test && npm run examples"
+  },
+  "lint-staged": {
+    "*.{ts,cts,mts,js,cjs,mjs}": [
+      "prettier --check",
+      "eslint --max-warnings=0"
+    ],
+    "*.{json,md,yml,yaml}": "prettier --check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aqsa-Hamza-Projects/pk-bank-utils.git"
+  },
+  "homepage": "https://github.com/Aqsa-Hamza-Projects/pk-bank-utils#readme",
+  "bugs": {
+    "url": "https://github.com/Aqsa-Hamza-Projects/pk-bank-utils/issues"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^2.1.0",
+    "eslint": "^9.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.0",
+    "prettier": "^3.3.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.1.0"
+  }
+}

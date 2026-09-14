@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "source": "Compiled from public bank and SBP IBAN-format documentation",
+    "lastVerified": "2026-09-14",
+    "disclaimer": "Best-effort community list. May lag bank code changes, renames, or new entrants. Verify against your bank/SBP before relying on it for compliance-sensitive use."
+  },
+  "banks": [
+    {"code": "HABB", "name": "Habib Bank Limited"},
+    {"code": "UNIL", "name": "United Bank Limited"},
+    {"code": "MUCB", "name": "MCB Bank Limited"},
+    {"code": "MEZN", "name": "Meezan Bank"},
+    {"code": "ALFH", "name": "Bank Alfalah Limited"},
+    {"code": "ABPA", "name": "Allied Bank Limited"},
+    {"code": "ASCM", "name": "Askari Bank Limited"},
+    {"code": "FAYS", "name": "Faysal Bank Limited"},
+    {"code": "SCBL", "name": "Standard Chartered Bank (Pakistan) Limited"},
+    {"code": "NBPA", "name": "National Bank of Pakistan"},
+    {"code": "BPUN", "name": "The Bank of Punjab"},
+    {"code": "KHYB", "name": "The Bank of Khyber"},
+    {"code": "SIND", "name": "Sindh Bank Limited"},
+    {"code": "SONE", "name": "Soneri Bank Limited"},
+    {"code": "JSBL", "name": "JS Bank Limited"},
+    {"code": "SAUD", "name": "Silk Bank Limited"},
+    {"code": "SUMM", "name": "Summit Bank Limited"},
+    {"code": "MPBL", "name": "Habib Metropolitan Bank Limited"},
+    {"code": "ALBA", "name": "Al Baraka Bank (Pakistan) Limited"},
+    {"code": "DUIB", "name": "Dubai Islamic Bank Pakistan Limited"},
+    {"code": "BKIP", "name": "BankIslami Pakistan Limited"},
+    {"code": "FWBL", "name": "First Women Bank Limited"}
+  ]
+}
