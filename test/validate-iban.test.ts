@@ -15,6 +15,10 @@ import {
   URDU_DIGITS_VALID_IBAN,
   ZERO_WIDTH_VALID_IBAN,
   MIXED_UNICODE_VALID_IBAN,
+  LETTER_O_ACCOUNT_IBAN,
+  ALL_LETTER_O_ACCOUNT_IBAN,
+  UNMAPPABLE_LETTER_ACCOUNT_IBAN,
+  RECOVERED_IBAN,
 } from './fixtures/ibans.js';
 
 describe('validateIBAN', () => {
@@ -133,6 +137,60 @@ describe('validateIBAN', () => {
   it('accepts Urdu digits and invisible characters together', () => {
     expect(validateIBAN(MIXED_UNICODE_VALID_IBAN).valid).toBe(true);
   });
+
+  it('rejects a letter in the account field even when the checksum passes', () => {
+    const result = validateIBAN(LETTER_O_ACCOUNT_IBAN);
+    expect(result.valid).toBe(false);
+    expect(result.reason).toBe('Account number must be 16 digits');
+    expect(result.bankCode).toBe('SCBL');
+    expect(result.accountNumber).toBe('O000001123456702');
+  });
+
+  it('accepts a letter in the account field when leniency is opted into', () => {
+    const result = validateIBAN(LETTER_O_ACCOUNT_IBAN, {
+      allowAlphanumericAccount: true,
+    });
+    expect(result.valid).toBe(true);
+    expect(result.accountNumber).toBe('O000001123456702');
+  });
+
+  it('keeps the old reason for genuinely non-alphanumeric input', () => {
+    expect(validateIBAN(NON_ALPHANUMERIC_IBAN).reason).toBe(
+      'Account number must be 16 alphanumeric characters'
+    );
+    expect(
+      validateIBAN(NON_ALPHANUMERIC_IBAN, {allowAlphanumericAccount: true})
+        .reason
+    ).toBe('Account number must be 16 alphanumeric characters');
+  });
+
+  it('suggests the intended IBAN when one letter is wrong', () => {
+    const result = validateIBAN(LETTER_O_ACCOUNT_IBAN);
+    expect(result.hints).toEqual([{position: 8, found: 'O', expected: '0'}]);
+    expect(result.suggestion).toBe(RECOVERED_IBAN);
+  });
+
+  it('suggests the intended IBAN when six letters are wrong', () => {
+    const result = validateIBAN(ALL_LETTER_O_ACCOUNT_IBAN);
+    expect(result.valid).toBe(false);
+    expect(result.reason).toBe('Account number must be 16 digits');
+    expect(result.hints).toHaveLength(6);
+    expect(result.suggestion).toBe(RECOVERED_IBAN);
+  });
+
+  it('offers no hints or suggestion for an unmappable letter', () => {
+    const result = validateIBAN(UNMAPPABLE_LETTER_ACCOUNT_IBAN);
+    expect(result.valid).toBe(false);
+    expect(result.hints).toBeUndefined();
+    expect(result.suggestion).toBeUndefined();
+  });
+
+  it('adds no hints to a valid result', () => {
+    const result = validateIBAN(RECOVERED_IBAN);
+    expect(result.valid).toBe(true);
+    expect(result.hints).toBeUndefined();
+    expect(result.suggestion).toBeUndefined();
+  });
 });
 
 describe('parseIBAN', () => {
@@ -143,5 +201,12 @@ describe('parseIBAN', () => {
     expect(parseIBAN(INVALID_CHECKSUM_IBAN)).toEqual(
       validateIBAN(INVALID_CHECKSUM_IBAN)
     );
+  });
+
+  it('forwards the options argument', () => {
+    expect(parseIBAN(LETTER_O_ACCOUNT_IBAN).valid).toBe(false);
+    expect(
+      parseIBAN(LETTER_O_ACCOUNT_IBAN, {allowAlphanumericAccount: true}).valid
+    ).toBe(true);
   });
 });
