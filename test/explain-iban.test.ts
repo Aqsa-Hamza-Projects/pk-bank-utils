@@ -6,6 +6,7 @@ import {
   ALL_LETTER_O_ACCOUNT_IBAN,
   UNRECOVERABLE_ACCOUNT_IBAN,
   UNMAPPABLE_LETTER_ACCOUNT_IBAN,
+  MIXED_TYPO_ACCOUNT_IBAN,
   RECOVERED_IBAN,
   INVALID_CHECKSUM_IBAN,
   TOO_SHORT_IBAN,
@@ -59,6 +60,19 @@ describe('explainIBAN', () => {
     expect(explanation.suggestion).toBeUndefined();
     expect(explanation.message).toBe(
       'Account number contains 1 non-digit character. Substituting them does not produce a valid IBAN.'
+    );
+  });
+
+  it('does not claim a substitution it never attempted', () => {
+    // 'O' is mappable, 'X' is not. collectAccountHints stops before trying
+    // MOD-97 at all, so the message must not say the substitution failed.
+    const explanation = explainIBAN(MIXED_TYPO_ACCOUNT_IBAN);
+    expect(explanation.hints).toEqual([
+      {position: 8, found: 'O', expected: '0'},
+    ]);
+    expect(explanation.suggestion).toBeUndefined();
+    expect(explanation.message).toBe(
+      'Account number contains 2 non-digit characters. 1 of them does not match any digit, so no correction can be offered.'
     );
   });
 

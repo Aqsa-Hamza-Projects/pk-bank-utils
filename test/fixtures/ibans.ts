@@ -54,3 +54,7 @@ export const UNMAPPABLE_LETTER_ACCOUNT_IBAN = 'PK36SCBLX000001123456702';
 // Both letter-O fixtures are one substitution away from this, which is
 // VALID_IBANS[0].
 export const RECOVERED_IBAN = 'PK36SCBL0000001123456702';
+
+// A mappable 'O' next to an unmappable 'X'. No substitution can be attempted
+// at all here, so the explanation must not claim one was tried and failed.
+export const MIXED_TYPO_ACCOUNT_IBAN = 'PK36SCBLOX00001123456702';

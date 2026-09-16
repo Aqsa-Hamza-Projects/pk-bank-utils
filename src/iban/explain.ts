@@ -41,16 +41,29 @@ export function explainIBAN(iban: string): IBANExplanation {
   };
 
   // Only a structurally sound IBAN has an account field worth inspecting.
+  // validateIBAN returns before the account check for a bad length, country
+  // or bank code, so a letter in the account field can never reach here
+  // alongside one of those failures. Reordering those branches would break
+  // that invariant.
   if (result.accountNumber === undefined) return fallback;
 
   const nonDigits = countNonDigits(result.accountNumber);
   if (nonDigits === 0) return fallback;
 
   const {hints, suggestion} = collectAccountHints(normalized);
+
+  // Characters we could see are wrong but could not map to a digit. When there
+  // are any, collectAccountHints never reaches the checksum at all — so the
+  // message must not claim a substitution was tried and failed.
+  const unmapped = nonDigits - hints.length;
+
   const noun = nonDigits === 1 ? 'character' : 'characters';
   let message = `Account number contains ${nonDigits} non-digit ${noun}.`;
   if (suggestion !== undefined) {
     message += ` Did you mean ${suggestion}?`;
+  } else if (unmapped > 0 && hints.length > 0) {
+    const verb = unmapped === 1 ? 'does' : 'do';
+    message += ` ${unmapped} of them ${verb} not match any digit, so no correction can be offered.`;
   } else if (hints.length > 0) {
     message += ' Substituting them does not produce a valid IBAN.';
   }

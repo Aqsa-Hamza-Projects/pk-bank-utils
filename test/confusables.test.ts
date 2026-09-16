@@ -6,6 +6,7 @@ import {
   ALL_LETTER_O_ACCOUNT_IBAN,
   UNRECOVERABLE_ACCOUNT_IBAN,
   UNMAPPABLE_LETTER_ACCOUNT_IBAN,
+  MIXED_TYPO_ACCOUNT_IBAN,
   RECOVERED_IBAN,
 } from './fixtures/ibans.js';
 
@@ -41,6 +42,14 @@ describe('collectAccountHints', () => {
     const {hints, suggestion} = collectAccountHints(UNRECOVERABLE_ACCOUNT_IBAN);
     expect(hints).toEqual([{position: 8, found: 'S', expected: '5'}]);
     expect(suggestion).toBeUndefined();
+  });
+
+  it('still points at a mappable letter sitting beside an unmappable one', () => {
+    // The 'O' is worth reporting on its own; the 'X' only costs us the
+    // suggestion, because we cannot know what was intended there.
+    expect(collectAccountHints(MIXED_TYPO_ACCOUNT_IBAN)).toEqual({
+      hints: [{position: 8, found: 'O', expected: '0'}],
+    });
   });
 
   it('maps the full confusable set', () => {
