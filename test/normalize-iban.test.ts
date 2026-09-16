@@ -8,6 +8,7 @@ import {
   NBSP_VALID_IBAN,
   BIDI_MARK_VALID_IBAN,
   MIXED_UNICODE_VALID_IBAN,
+  BOM_VALID_IBAN,
 } from './fixtures/ibans.js';
 
 describe('normalizeIBAN', () => {
@@ -56,6 +57,10 @@ describe('normalizeIBAN', () => {
 
   it('strips a non-breaking space', () => {
     expect(normalizeIBAN(NBSP_VALID_IBAN)).toBe(EXPECTED);
+  });
+
+  it('strips a byte-order mark', () => {
+    expect(normalizeIBAN(BOM_VALID_IBAN)).toBe(EXPECTED);
   });
 
   it('strips bidi formatting marks', () => {
