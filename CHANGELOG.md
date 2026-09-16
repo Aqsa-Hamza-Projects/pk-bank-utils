@@ -11,6 +11,15 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+### Fixed
+
+- `normalizeIBAN` now maps Arabic-Indic and Eastern-Arabic-Indic (Urdu)
+  digits to ASCII and strips zero-width characters, the BOM, bidi marks and
+  non-breaking spaces. IBANs typed on an Urdu keyboard or pasted from
+  WhatsApp were previously rejected as malformed. Every function that
+  normalizes first — `validateIBAN`, `parseIBAN`, `formatIBAN`, `maskIBAN`,
+  `getBankFromIBAN` — accepts this input as a result.
+
 ## [0.0.1] — 2026-09-14
 
 First release.
