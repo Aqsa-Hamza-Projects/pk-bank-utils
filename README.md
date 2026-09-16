@@ -92,26 +92,36 @@ import {validateIBAN, getBankFromIBAN} from 'pk-bank-utils';
 
 All exports come from the package root (`pk-bank-utils`).
 
-| Export              | Signature                                |
-| ------------------- | ---------------------------------------- |
-| `validateIBAN`      | `(iban: string) => IBANValidationResult` |
-| `parseIBAN`         | `(iban: string) => IBANValidationResult` |
-| `normalizeIBAN`     | `(iban: string) => string`               |
-| `formatIBAN`        | `(iban: string) => string`               |
-| `maskIBAN`          | `(iban: string) => string`               |
-| `maskAccountNumber` | `(accountNumber: string) => string`      |
-| `getBank`           | `(code: string) => Bank \| null`         |
-| `getBankFromIBAN`   | `(iban: string) => Bank \| null`         |
-| `searchBanks`       | `(query: string) => Bank[]`              |
-| `getBanks`          | `() => Bank[]`                           |
+| Export              | Signature                                                               |
+| ------------------- | ----------------------------------------------------------------------- |
+| `validateIBAN`      | `(iban: string, options?: ValidateIBANOptions) => IBANValidationResult` |
+| `parseIBAN`         | `(iban: string, options?: ValidateIBANOptions) => IBANValidationResult` |
+| `explainIBAN`       | `(iban: string) => IBANExplanation`                                     |
+| `normalizeIBAN`     | `(iban: string) => string`                                              |
+| `formatIBAN`        | `(iban: string) => string`                                              |
+| `maskIBAN`          | `(iban: string) => string`                                              |
+| `maskAccountNumber` | `(accountNumber: string) => string`                                     |
+| `getBank`           | `(code: string) => Bank \| null`                                        |
+| `getBankFromIBAN`   | `(iban: string) => Bank \| null`                                        |
+| `searchBanks`       | `(query: string) => Bank[]`                                             |
+| `getBanks`          | `() => Bank[]`                                                          |
 
-Plus the exported types `IBANValidationResult` and `Bank`.
+Plus the exported types `IBANValidationResult`, `IBANExplanation`,
+`IBANHint`, `ValidateIBANOptions` and `Bank`.
 
-### `validateIBAN(iban: string): IBANValidationResult`
+### `validateIBAN(iban: string, options?: ValidateIBANOptions): IBANValidationResult`
 
 Structural validation (length, country prefix, field character classes)
 followed by an ISO 7064 MOD-97 checksum. Never throws — malformed input
 returns `{ valid: false, reason: '...' }`.
+
+**The 16-character account field must now be digits only.** Every
+SBP-licensed bank issues purely numeric account fields, so a letter there is
+a typo — and when its MOD-97 checksum happened to pass, the package
+previously reported a wrong IBAN as valid. This is a **breaking change** for
+the small number of callers that relied on the ISO registry's `16!c` format.
+Pass `{allowAlphanumericAccount: true}` as the second argument to restore
+that behaviour.
 
 ```ts
 validateIBAN('PK36SCBL0000001123456702');
@@ -122,6 +132,23 @@ validateIBAN('PK36SCBL0000001123456701');
 
 validateIBAN('not an iban');
 // { valid: false, reason: 'IBAN must be 24 characters, got 9' }
+
+// The letter O is a typo
+validateIBAN('PK36SCBLO000001123456702');
+// {
+//   valid: false,
+//   reason: 'Account number must be 16 digits',
+//   country: 'PK',
+//   checkDigits: '36',
+//   bankCode: 'SCBL',
+//   accountNumber: 'O000001123456702',
+//   hints: [{ position: 8, found: 'O', expected: '0' }],
+//   suggestion: 'PK36SCBL0000001123456702'
+// }
+
+// Restore the old lenient behaviour with the opt-out
+validateIBAN('PK36SCBLO000001123456702', {allowAlphanumericAccount: true});
+// { valid: true, country: 'PK', checkDigits: '36', bankCode: 'SCBL', accountNumber: 'O000001123456702' }
 ```
 
 Accepts lowercase, spaced, and dashed input, Urdu and Arabic-Indic digits,
@@ -132,11 +159,36 @@ Bank-code recognition is **not** part of validity: an IBAN with an unknown
 4-letter bank code can still be `valid: true`. Use `getBankFromIBAN` to
 look up the name separately.
 
-### `parseIBAN(iban: string): IBANValidationResult`
+### `parseIBAN(iban: string, options?: ValidateIBANOptions): IBANValidationResult`
 
 Alias for `validateIBAN` — the same function, offered under the name
 you'll also reach for when the goal is extracting fields rather than
 checking validity.
+
+### `explainIBAN(iban: string): IBANExplanation`
+
+Reports which characters in the account field are letters that were almost
+certainly meant to be digits, and, when substituting all of them yields a
+checksum-valid IBAN, the IBAN the user meant. Never throws.
+
+```ts
+explainIBAN('PK36SCBLOOOOOO1123456702');
+// {
+//   normalized: 'PK36SCBLOOOOOO1123456702',
+//   valid: false,
+//   reason: 'Account number must be 16 digits',
+//   hints: [
+//     { position: 8, found: 'O', expected: '0' },
+//     { position: 9, found: 'O', expected: '0' },
+//     { position: 10, found: 'O', expected: '0' },
+//     { position: 11, found: 'O', expected: '0' },
+//     { position: 12, found: 'O', expected: '0' },
+//     { position: 13, found: 'O', expected: '0' }
+//   ],
+//   suggestion: 'PK36SCBL0000001123456702',
+//   message: 'Account number contains 6 non-digit characters. Did you mean PK36SCBL0000001123456702?'
+// }
+```
 
 ### `normalizeIBAN(iban: string): string`
 
@@ -216,14 +268,35 @@ affect the package's internal data).
 
 ### `IBANValidationResult`
 
-| Field           | Type                  | Notes                                                       |
-| --------------- | --------------------- | ----------------------------------------------------------- |
-| `valid`         | `boolean`             | `true` only if structure and checksum both pass             |
-| `country`       | `'PK' \| undefined`   | Present once the IBAN is structurally well-formed           |
-| `checkDigits`   | `string \| undefined` | The 2-digit check portion                                   |
-| `bankCode`      | `string \| undefined` | The 4-letter bank code — present even on a checksum failure |
-| `accountNumber` | `string \| undefined` | The remaining 16 characters                                 |
-| `reason`        | `string \| undefined` | Present only when `valid: false`                            |
+| Field           | Type                      | Notes                                                       |
+| --------------- | ------------------------- | ----------------------------------------------------------- |
+| `valid`         | `boolean`                 | `true` only if structure and checksum both pass             |
+| `country`       | `'PK' \| undefined`       | Present once the IBAN is structurally well-formed           |
+| `checkDigits`   | `string \| undefined`     | The 2-digit check portion                                   |
+| `bankCode`      | `string \| undefined`     | The 4-letter bank code — present even on a checksum failure |
+| `accountNumber` | `string \| undefined`     | The remaining 16 characters                                 |
+| `reason`        | `string \| undefined`     | Present only when `valid: false`                            |
+| `hints`         | `IBANHint[] \| undefined` | Account-field positions holding a likely mistyped digit     |
+| `suggestion`    | `string \| undefined`     | The intended IBAN, when substituting every hint checksums   |
+
+### `IBANExplanation`
+
+| Field        | Type                  | Notes                                                                  |
+| ------------ | --------------------- | ---------------------------------------------------------------------- |
+| `normalized` | `string`              | The uppercased, space/dash-stripped form                               |
+| `valid`      | `boolean`             | `true` if the IBAN passed structure and checksum                       |
+| `reason`     | `string \| undefined` | Present only when `valid: false`                                       |
+| `hints`      | `IBANHint[]`          | Always an array; empty when there is nothing to point at               |
+| `suggestion` | `string \| undefined` | Present only when substituting every hint yields a checksum-valid IBAN |
+| `message`    | `string`              | A ready-to-log sentence                                                |
+
+### `IBANHint`
+
+| Field      | Type     | Notes                                                                      |
+| ---------- | -------- | -------------------------------------------------------------------------- |
+| `position` | `number` | 0-based index into the 24-character IBAN; the first account character is 8 |
+| `found`    | `string` | The character actually present at that position                            |
+| `expected` | `string` | The digit it was almost certainly meant to be                              |
 
 ### `Bank`
 
@@ -249,6 +322,9 @@ welcome via a pull request against `src/data/banks.json`.
   checks structure and checksum only. Real account verification requires an
   authorized bank/payment API integration, which is outside this package's
   scope by design.
+- **A `suggestion` is not a search over arbitrary edits.** It is a
+  checksum-confirmed correction of visually confusable characters only
+  (O↔0, I/L↔1, S↔5, B↔8, Z↔2, G↔6). It does not claim the account exists.
 - **Does not validate non-Pakistani IBANs.**
 - **Does not include SWIFT/BIC parsing, Raast identifiers, or phone-number
   utilities** in this release.
