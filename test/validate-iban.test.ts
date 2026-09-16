@@ -12,6 +12,9 @@ import {
   DASHED_VALID_IBAN,
   MALFORMED_CHECK_DIGITS_IBAN,
   MALFORMED_BANK_CODE_IBAN,
+  URDU_DIGITS_VALID_IBAN,
+  ZERO_WIDTH_VALID_IBAN,
+  MIXED_UNICODE_VALID_IBAN,
 } from './fixtures/ibans.js';
 
 describe('validateIBAN', () => {
@@ -105,6 +108,30 @@ describe('validateIBAN', () => {
     expect(() => validateIBAN(undefined)).not.toThrow();
     // @ts-expect-error deliberate bad input
     expect(() => validateIBAN(12345)).not.toThrow();
+  });
+
+  it('accepts an IBAN typed with Urdu digits', () => {
+    expect(validateIBAN(URDU_DIGITS_VALID_IBAN)).toEqual({
+      valid: true,
+      country: 'PK',
+      checkDigits: '36',
+      bankCode: 'SCBL',
+      accountNumber: '0000001123456702',
+    });
+  });
+
+  it('accepts an IBAN pasted with a zero-width space', () => {
+    expect(validateIBAN(ZERO_WIDTH_VALID_IBAN)).toEqual({
+      valid: true,
+      country: 'PK',
+      checkDigits: '36',
+      bankCode: 'SCBL',
+      accountNumber: '0000001123456702',
+    });
+  });
+
+  it('accepts Urdu digits and invisible characters together', () => {
+    expect(validateIBAN(MIXED_UNICODE_VALID_IBAN).valid).toBe(true);
   });
 });
 
