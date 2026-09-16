@@ -12,11 +12,15 @@ import {
 
 describe('collectAccountHints', () => {
   it('reports nothing for an all-numeric account field', () => {
-    expect(collectAccountHints(VALID_IBANS[0] as string)).toEqual({hints: []});
+    expect(collectAccountHints(VALID_IBANS[0] as string)).toEqual({
+      nonDigits: 0,
+      hints: [],
+    });
   });
 
   it('points at a single confusable letter and recovers the IBAN', () => {
     expect(collectAccountHints(LETTER_O_ACCOUNT_IBAN)).toEqual({
+      nonDigits: 1,
       hints: [{position: 8, found: 'O', expected: '0'}],
       suggestion: RECOVERED_IBAN,
     });
@@ -34,6 +38,7 @@ describe('collectAccountHints', () => {
 
   it('offers no hint at all when a letter has no intended digit', () => {
     expect(collectAccountHints(UNMAPPABLE_LETTER_ACCOUNT_IBAN)).toEqual({
+      nonDigits: 1,
       hints: [],
     });
   });
@@ -48,6 +53,7 @@ describe('collectAccountHints', () => {
     // The 'O' is worth reporting on its own; the 'X' only costs us the
     // suggestion, because we cannot know what was intended there.
     expect(collectAccountHints(MIXED_TYPO_ACCOUNT_IBAN)).toEqual({
+      nonDigits: 2,
       hints: [{position: 8, found: 'O', expected: '0'}],
     });
   });

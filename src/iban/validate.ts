@@ -71,6 +71,12 @@ export function validateIBAN(
 
     // A letter where a digit belongs. Point at it, and name the IBAN the user
     // meant when substituting the confusable characters checksums.
+    //
+    // Doing this here rather than only in explainIBAN costs one extra MOD-97
+    // on a path that has already failed, and it means the caller who checks
+    // `valid` gets the correction without knowing a second function exists —
+    // which is the whole point, since that caller is the one about to show a
+    // user "invalid IBAN" and nothing else.
     const {hints, suggestion} = collectAccountHints(normalized);
     return {
       valid: false,

@@ -3,15 +3,6 @@ import {normalizeIBAN} from './normalize.js';
 import {validateIBAN} from './validate.js';
 import {collectAccountHints} from './confusables.js';
 
-function countNonDigits(account: string): number {
-  let count = 0;
-  for (let i = 0; i < account.length; i++) {
-    const ch = account.charAt(i);
-    if (ch < '0' || ch > '9') count++;
-  }
-  return count;
-}
-
 /**
  * Explains why an IBAN is wrong in terms a user can act on: which characters
  * in the account field are letters where digits belong, and — when the
@@ -47,10 +38,8 @@ export function explainIBAN(iban: string): IBANExplanation {
   // that invariant.
   if (result.accountNumber === undefined) return fallback;
 
-  const nonDigits = countNonDigits(result.accountNumber);
+  const {nonDigits, hints, suggestion} = collectAccountHints(normalized);
   if (nonDigits === 0) return fallback;
-
-  const {hints, suggestion} = collectAccountHints(normalized);
 
   // Characters we could see are wrong but could not map to a digit. When there
   // are any, collectAccountHints never reaches the checksum at all — so the

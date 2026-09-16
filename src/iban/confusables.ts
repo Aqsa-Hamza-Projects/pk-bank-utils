@@ -4,6 +4,9 @@ import {passesMod97} from './mod97.js';
 // Characters a human types by mistake for a digit, and the digit they meant.
 // Uppercase keys only: normalizeIBAN uppercases before anything else sees the
 // string, so a typed lowercase 'l' arrives here as 'L'.
+//
+// This set is also written out in prose in README.md ("What this package does
+// not do"). Change one, change the other.
 const CONFUSABLES: Readonly<Record<string, string>> = {
   O: '0',
   I: '1',
@@ -26,17 +29,20 @@ const ACCOUNT_OFFSET = 8;
  * Pure; never throws. Callers guarantee the input shape.
  */
 export function collectAccountHints(normalized: string): {
+  nonDigits: number;
   hints: IBANHint[];
   suggestion?: string;
 } {
   const account = normalized.slice(ACCOUNT_OFFSET);
   const candidate = account.split('');
   const hints: IBANHint[] = [];
+  let nonDigits = 0;
   let unresolvable = false;
 
   for (let i = 0; i < account.length; i++) {
     const found = account.charAt(i);
     if (found >= '0' && found <= '9') continue;
+    nonDigits++;
 
     const expected = CONFUSABLES[found];
     if (expected === undefined) {
@@ -51,10 +57,12 @@ export function collectAccountHints(normalized: string): {
     candidate[i] = expected;
   }
 
-  if (hints.length === 0 || unresolvable) return {hints};
+  if (hints.length === 0 || unresolvable) return {nonDigits, hints};
 
   // One all-at-once substitution, confirmed by the checksum. Searching subsets
   // would be a combinatorial hunt for a coincidence rather than a correction.
   const suggestion = normalized.slice(0, ACCOUNT_OFFSET) + candidate.join('');
-  return passesMod97(suggestion) ? {hints, suggestion} : {hints};
+  return passesMod97(suggestion)
+    ? {nonDigits, hints, suggestion}
+    : {nonDigits, hints};
 }

@@ -16,7 +16,13 @@ export interface IBANExplanation {
   hints: IBANHint[];
   /** Present only when substituting every hint yields a checksum-valid IBAN. */
   suggestion?: string;
-  /** A ready-to-log sentence. Not a localization surface; callers that need
-   * their own wording use `hints` and `suggestion`. */
+  /**
+   * A ready-to-log English sentence, for diagnostics and quick prototypes.
+   *
+   * This is deliberately NOT a localization surface and its exact wording is
+   * not part of the package's compatibility promise — do not build a user
+   * interface by parsing or displaying it. `hints` and `suggestion` are the
+   * machine-readable contract; render your own copy from those.
+   */
   message: string;
 }
