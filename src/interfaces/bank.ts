@@ -1,9 +1,5 @@
 export type BankType =
-  | 'commercial'
-  | 'islamic'
-  | 'microfinance'
-  | 'digital'
-  | 'specialized';
+  'commercial' | 'islamic' | 'microfinance' | 'digital' | 'specialized';
 
 export type BankStatus = 'active' | 'merged' | 'defunct';
 
