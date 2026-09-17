@@ -5,14 +5,20 @@ describe('bank registry', () => {
   it('finds a bank by exact code', () => {
     expect(findBankByCode('MEZN')).toEqual({
       code: 'MEZN',
-      name: 'Meezan Bank',
+      name: 'Meezan Bank Limited',
+      type: 'islamic',
+      swift: 'MEZNPKKA',
+      status: 'active',
     });
   });
 
   it('is case-insensitive', () => {
     expect(findBankByCode('mezn')).toEqual({
       code: 'MEZN',
-      name: 'Meezan Bank',
+      name: 'Meezan Bank Limited',
+      type: 'islamic',
+      swift: 'MEZNPKKA',
+      status: 'active',
     });
   });
 
