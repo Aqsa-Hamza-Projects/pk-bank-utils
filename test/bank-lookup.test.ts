@@ -7,6 +7,9 @@ describe('getBank', () => {
     expect(getBank('SCBL')).toEqual({
       code: 'SCBL',
       name: 'Standard Chartered Bank (Pakistan) Limited',
+      type: 'commercial',
+      swift: 'SCBLPKKX',
+      status: 'active',
     });
   });
 
@@ -25,6 +28,9 @@ describe('getBankFromIBAN', () => {
     expect(getBankFromIBAN(VALID_IBANS[0] as string)).toEqual({
       code: 'SCBL',
       name: 'Standard Chartered Bank (Pakistan) Limited',
+      type: 'commercial',
+      swift: 'SCBLPKKX',
+      status: 'active',
     });
   });
 
@@ -32,6 +38,9 @@ describe('getBankFromIBAN', () => {
     expect(getBankFromIBAN(INVALID_CHECKSUM_IBAN)).toEqual({
       code: 'SCBL',
       name: 'Standard Chartered Bank (Pakistan) Limited',
+      type: 'commercial',
+      swift: 'SCBLPKKX',
+      status: 'active',
     });
   });
 

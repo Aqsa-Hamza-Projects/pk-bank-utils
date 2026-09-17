@@ -20,7 +20,13 @@ describe('getBanks', () => {
 describe('searchBanks', () => {
   it('matches by case-insensitive substring on name', () => {
     expect(searchBanks('meezan')).toEqual([
-      {code: 'MEZN', name: 'Meezan Bank'},
+      {
+        code: 'MEZN',
+        name: 'Meezan Bank Limited',
+        type: 'islamic',
+        swift: 'MEZNPKKA',
+        status: 'active',
+      },
     ]);
   });
 
