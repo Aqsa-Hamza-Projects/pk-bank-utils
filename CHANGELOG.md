@@ -11,6 +11,43 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+### Added
+
+- `Bank` now carries `type`, `swift`, `status` and an optional `successorCode`,
+  so callers can tell a microfinance bank from a commercial one and can still
+  resolve an IBAN issued by a bank that has since merged.
+- `BankType` and `BankStatus` are exported.
+- `_meta.sources` in `src/data/banks.json` records each source, its retrieval
+  date and what it covers.
+
+### Changed
+
+- The bank registry grew from 22 to 39 entries, rebuilt from the State Bank of
+  Pakistan's IBAN Guidelines and its Dams Fund IBAN notification, cross-checked
+  against theswiftcodes.com. Adds Bank Al Habib, Samba, MCB Islamic, Citibank,
+  Deutsche Bank, ICBC, Bank of China, MUFG, ZTBL, SME Bank, Easypaisa Bank and
+  three microfinance banks, plus the merged KASB, NIB and Burj banks.
+- Three bank codes were corrected to the identifiers SBP actually publishes:
+  `ALBA` to `AIIN` (Al Baraka), `SUMM` to `SUMB` (Summit, now Bank Makramah)
+  and `FWBL` to `FWOM` (First Women Bank). SBP's IBAN Guidelines require the
+  bank identifier to be the first four letters of the bank's SWIFT BIC; the old
+  values were the banks' acronyms and appear in no source, so no real IBAN
+  could have contained them.
+- Bank names now use their full legal form, for example `Meezan Bank` became
+  `Meezan Bank Limited`.
+
+### Removed
+
+- `getBank('ALBA')`, `getBank('SUMM')` and `getBank('FWBL')` now return `null`.
+  These codes were never issued by SBP, so `getBankFromIBAN` could never have
+  returned them, but a caller who hard-coded one will see the change.
+
+### Note for the release
+
+Adding required fields to `Bank` is source-compatible for code that reads a
+`Bank`, but breaking for code that constructs one. Together with the account
+strictness in PR-B2 this argues for 0.1.0 rather than 0.0.2.
+
 ## [0.0.1] — 2026-09-14
 
 First release.

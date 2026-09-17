@@ -1,9 +1,53 @@
 import {describe, it, expect} from 'vitest';
 import {COUNTRY_CODE, IBAN_LENGTH} from '../src/constants.js';
+import type {Bank, BankType, BankStatus} from '../src/interfaces/index.js';
 
 describe('constants', () => {
   it('defines the Pakistan IBAN shape', () => {
     expect(COUNTRY_CODE).toBe('PK');
     expect(IBAN_LENGTH).toBe(24);
+  });
+});
+
+describe('Bank', () => {
+  it('describes a merged bank that points at its successor', () => {
+    // KASB Bank -> BankIslami, 2015. The old code stays resolvable because
+    // IBANs issued before the merger are still in customer records.
+    const merged: Bank = {
+      code: 'PLCO',
+      name: 'KASB Bank Limited',
+      type: 'commercial',
+      swift: 'PLCOPKKA',
+      status: 'merged',
+      successorCode: 'BKIP',
+    };
+
+    expect(merged.successorCode).toBe('BKIP');
+  });
+
+  it('lets a bank outside the SWIFT network carry a null BIC', () => {
+    const noSwift: Bank = {
+      code: 'UMBL',
+      name: 'U Microfinance Bank Limited',
+      type: 'microfinance',
+      swift: null,
+      status: 'active',
+    };
+
+    expect(noSwift.swift).toBeNull();
+  });
+
+  it('names every licence class and lifecycle status', () => {
+    const types: BankType[] = [
+      'commercial',
+      'islamic',
+      'microfinance',
+      'digital',
+      'specialized',
+    ];
+    const statuses: BankStatus[] = ['active', 'merged', 'defunct'];
+
+    expect(types).toHaveLength(5);
+    expect(statuses).toHaveLength(3);
   });
 });
