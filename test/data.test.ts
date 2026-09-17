@@ -1,6 +1,7 @@
 import {describe, it, expect} from 'vitest';
 import banksJson from '../src/data/banks.json' with {type: 'json'};
 import {getBankFromIBAN} from '../src/banks/lookup.js';
+import {validateIBAN} from '../src/iban/validate.js';
 
 interface BanksFile {
   _meta: {
@@ -27,14 +28,6 @@ const BANK_TYPES = [
   'specialized',
 ];
 const BANK_STATUSES = ['active', 'merged', 'defunct'];
-
-/**
- * Codes whose IBAN identifier is not its BIC prefix. Empty today: every entry
- * that has a `swift` satisfies the SBP rule. Kept so that a future divergence
- * has to be declared here, with its evidence, rather than silently weakening
- * the assertion below.
- */
-const CODE_BIC_DIVERGENCE = new Set<string>([]);
 
 function mod97(digits: string): number {
   let rem = 0;
@@ -117,7 +110,6 @@ describe('banks.json structure', () => {
   it('matches each code to its BIC prefix (SBP IBAN Guidelines rule)', () => {
     for (const bank of data.banks) {
       if (bank.swift === null) continue;
-      if (CODE_BIC_DIVERGENCE.has(bank.code)) continue;
       expect(bank.swift.slice(0, 4), bank.code).toBe(bank.code);
     }
   });
@@ -150,7 +142,9 @@ describe('banks.json structure', () => {
     expect(types).toContain('microfinance');
     expect(types).toContain('digital');
     expect(types).toContain('specialized');
-    expect(data.banks.length).toBeGreaterThanOrEqual(39);
+    // A sanity floor against a truncated or half-written data file, not a
+    // ratchet: removing an entry that turns out to be wrong is legitimate.
+    expect(data.banks.length).toBeGreaterThanOrEqual(20);
   });
 });
 
@@ -158,7 +152,11 @@ describe('bank codes reported unresolved in FINDINGS PR-B3', () => {
   // Only the codes that a cited source confirms. SILK, ESPA, NRSP, APNA, KHUS
   // and FINC stay out of the registry until one does — see the PR body.
   it.each(['BAHL', 'TMFB', 'ZTBL', 'UMBL'])('resolves %s', (code) => {
-    const bank = getBankFromIBAN(buildIBAN(code));
+    const iban = buildIBAN(code);
+    // Prove the fixture against the shipped validator, not just against the
+    // MOD-97 helper in this file.
+    expect(validateIBAN(iban).valid, iban).toBe(true);
+    const bank = getBankFromIBAN(iban);
     expect(bank).not.toBeNull();
     expect(bank?.code).toBe(code);
   });

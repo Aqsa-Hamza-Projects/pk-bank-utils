@@ -258,15 +258,16 @@ getBankFromIBAN('PK24PLCO0000001123456702');
 ## Bank registry — accuracy disclaimer
 
 The bank-code directory (`getBank`, `getBankFromIBAN`, `searchBanks`,
-`getBanks`) holds 39 entries compiled on 2026-09-17 from the State Bank of
+`getBanks`) is compiled from the State Bank of
 Pakistan's own documents: the [IBAN Guidelines (PSD Circular Letter No. 02 of 2012)](https://archive.sbp.org.pk/psd/2012/IBAN-Guidelines-CL02-2012.pdf),
 which establish that the IBAN bank identifier is the first four letters of the
 bank's SWIFT BIC, and the [Dams Fund IBAN
 notification](https://archive.sbp.org.pk/notifications/FD/DamFund/Detail-1.pdf),
 which publishes live IBANs for 36 institutions — including the microfinance
 banks that no SWIFT directory lists. Both were cross-checked against
-[theswiftcodes.com/pakistan](https://www.theswiftcodes.com/pakistan/). Full
-provenance, per source, is in `_meta.sources` in `src/data/banks.json`.
+[theswiftcodes.com/pakistan](https://www.theswiftcodes.com/pakistan/). The
+registry's size and its verification date are whatever `src/data/banks.json`
+says: see `_meta.lastVerified` and the per-source `_meta.sources`.
 
 It is still a point-in-time snapshot rather than an automated feed, and it is
 **deliberately incomplete**: a bank is listed only when its code was found in a
