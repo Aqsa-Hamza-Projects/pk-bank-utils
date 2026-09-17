@@ -1,31 +1,312 @@
 {
   "_meta": {
-    "source": "Compiled from public bank and SBP IBAN-format documentation",
-    "lastVerified": "2026-09-14",
-    "disclaimer": "Best-effort community list. May lag bank code changes, renames, or new entrants. Verify against your bank/SBP before relying on it for compliance-sensitive use."
+    "source": "State Bank of Pakistan IBAN Guidelines (PSD Circular Letter No. 02 of 2012), the SBP Dams Fund IBAN notification and the SBP RDA BIC list; cross-checked against theswiftcodes.com/pakistan",
+    "lastVerified": "2026-09-17",
+    "disclaimer": "Best-effort community list. May lag bank code changes, renames, or new entrants. Verify against your bank/SBP before relying on it for compliance-sensitive use.",
+    "sources": [
+      {
+        "name": "SBP IBAN Guidelines (PSD Circular Letter No. 02 of 2012)",
+        "url": "https://archive.sbp.org.pk/psd/2012/IBAN-Guidelines-CL02-2012.pdf",
+        "retrieved": "2026-09-17",
+        "covers": "The rule that the IBAN bank identifier is the first four letters of the bank's SWIFT BIC, and that non-SWIFT banks use a BIC assigned via PRISM or by SBP."
+      },
+      {
+        "name": "SBP Diamer Bhasha & Mohmand Dams Fund IBAN notification",
+        "url": "https://archive.sbp.org.pk/notifications/FD/DamFund/Detail-1.pdf",
+        "retrieved": "2026-09-17",
+        "covers": "Live IBANs for 36 institutions, including microfinance and specialized banks that are absent from SWIFT directories."
+      },
+      {
+        "name": "SBP Roshan Digital Account participating-bank BIC list",
+        "url": "https://archive.sbp.org.pk/RDAC/pdf/BICs.pdf",
+        "retrieved": "2026-09-17",
+        "covers": "13 RDA participating banks only - not a full bank registry."
+      },
+      {
+        "name": "theswiftcodes.com - Pakistan",
+        "url": "https://www.theswiftcodes.com/pakistan/",
+        "retrieved": "2026-09-17",
+        "covers": "Head-office BICs, used to cross-check bank codes and to populate the swift field."
+      }
+    ]
   },
   "banks": [
-    {"code": "HABB", "name": "Habib Bank Limited"},
-    {"code": "UNIL", "name": "United Bank Limited"},
-    {"code": "MUCB", "name": "MCB Bank Limited"},
-    {"code": "MEZN", "name": "Meezan Bank"},
-    {"code": "ALFH", "name": "Bank Alfalah Limited"},
-    {"code": "ABPA", "name": "Allied Bank Limited"},
-    {"code": "ASCM", "name": "Askari Bank Limited"},
-    {"code": "FAYS", "name": "Faysal Bank Limited"},
-    {"code": "SCBL", "name": "Standard Chartered Bank (Pakistan) Limited"},
-    {"code": "NBPA", "name": "National Bank of Pakistan"},
-    {"code": "BPUN", "name": "The Bank of Punjab"},
-    {"code": "KHYB", "name": "The Bank of Khyber"},
-    {"code": "SIND", "name": "Sindh Bank Limited"},
-    {"code": "SONE", "name": "Soneri Bank Limited"},
-    {"code": "JSBL", "name": "JS Bank Limited"},
-    {"code": "SAUD", "name": "Silk Bank Limited"},
-    {"code": "SUMM", "name": "Summit Bank Limited"},
-    {"code": "MPBL", "name": "Habib Metropolitan Bank Limited"},
-    {"code": "ALBA", "name": "Al Baraka Bank (Pakistan) Limited"},
-    {"code": "DUIB", "name": "Dubai Islamic Bank Pakistan Limited"},
-    {"code": "BKIP", "name": "BankIslami Pakistan Limited"},
-    {"code": "FWBL", "name": "First Women Bank Limited"}
+    {
+      "code": "ABPA",
+      "name": "Allied Bank Limited",
+      "type": "commercial",
+      "swift": "ABPAPKKA",
+      "status": "active"
+    },
+    {
+      "code": "AIIN",
+      "name": "Al Baraka Bank (Pakistan) Limited",
+      "type": "islamic",
+      "swift": "AIINPKKA",
+      "status": "active"
+    },
+    {
+      "code": "ALFH",
+      "name": "Bank Alfalah Limited",
+      "type": "commercial",
+      "swift": "ALFHPKKA",
+      "status": "active"
+    },
+    {
+      "code": "ASCM",
+      "name": "Askari Bank Limited",
+      "type": "commercial",
+      "swift": "ASCMPKKA",
+      "status": "active"
+    },
+    {
+      "code": "BAHL",
+      "name": "Bank Al Habib Limited",
+      "type": "commercial",
+      "swift": "BAHLPKKA",
+      "status": "active"
+    },
+    {
+      "code": "BKCH",
+      "name": "Bank of China Limited - Pakistan Branch",
+      "type": "commercial",
+      "swift": "BKCHPKKA",
+      "status": "active"
+    },
+    {
+      "code": "BKIP",
+      "name": "BankIslami Pakistan Limited",
+      "type": "islamic",
+      "swift": "BKIPPKKA",
+      "status": "active"
+    },
+    {
+      "code": "BOTK",
+      "name": "MUFG Bank, Ltd. - Pakistan",
+      "type": "commercial",
+      "swift": null,
+      "status": "active"
+    },
+    {
+      "code": "BPUN",
+      "name": "The Bank of Punjab",
+      "type": "commercial",
+      "swift": "BPUNPKKA",
+      "status": "active"
+    },
+    {
+      "code": "BURJ",
+      "name": "Burj Bank Limited",
+      "type": "islamic",
+      "swift": "BURJPKKA",
+      "status": "merged",
+      "successorCode": "AIIN"
+    },
+    {
+      "code": "CITI",
+      "name": "Citibank N.A. - Pakistan",
+      "type": "commercial",
+      "swift": "CITIPKKX",
+      "status": "active"
+    },
+    {
+      "code": "DEUT",
+      "name": "Deutsche Bank AG - Pakistan",
+      "type": "commercial",
+      "swift": "DEUTPKKA",
+      "status": "active"
+    },
+    {
+      "code": "DUIB",
+      "name": "Dubai Islamic Bank Pakistan Limited",
+      "type": "islamic",
+      "swift": "DUIBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "FAYS",
+      "name": "Faysal Bank Limited",
+      "type": "islamic",
+      "swift": "FAYSPKKA",
+      "status": "active"
+    },
+    {
+      "code": "FMFB",
+      "name": "The First MicroFinanceBank Limited",
+      "type": "microfinance",
+      "swift": null,
+      "status": "active"
+    },
+    {
+      "code": "FWOM",
+      "name": "First Women Bank Limited",
+      "type": "commercial",
+      "swift": "FWOMPKKA",
+      "status": "active"
+    },
+    {
+      "code": "HABB",
+      "name": "Habib Bank Limited",
+      "type": "commercial",
+      "swift": "HABBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "ICBK",
+      "name": "Industrial and Commercial Bank of China - Pakistan",
+      "type": "commercial",
+      "swift": "ICBKPKKA",
+      "status": "active"
+    },
+    {
+      "code": "JSBL",
+      "name": "JS Bank Limited",
+      "type": "commercial",
+      "swift": "JSBLPKKA",
+      "status": "active"
+    },
+    {
+      "code": "KHYB",
+      "name": "The Bank of Khyber",
+      "type": "commercial",
+      "swift": "KHYBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "MCIB",
+      "name": "MCB Islamic Bank Limited",
+      "type": "islamic",
+      "swift": "MCIBPKKI",
+      "status": "active"
+    },
+    {
+      "code": "MEZN",
+      "name": "Meezan Bank Limited",
+      "type": "islamic",
+      "swift": "MEZNPKKA",
+      "status": "active"
+    },
+    {
+      "code": "MPBL",
+      "name": "Habib Metropolitan Bank Limited",
+      "type": "commercial",
+      "swift": "MPBLPKKA",
+      "status": "active"
+    },
+    {
+      "code": "MUCB",
+      "name": "MCB Bank Limited",
+      "type": "commercial",
+      "swift": "MUCBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "NBPA",
+      "name": "National Bank of Pakistan",
+      "type": "commercial",
+      "swift": "NBPAPKKA",
+      "status": "active"
+    },
+    {
+      "code": "NIBP",
+      "name": "NIB Bank Limited",
+      "type": "commercial",
+      "swift": "NIBPPKKA",
+      "status": "merged",
+      "successorCode": "MUCB"
+    },
+    {
+      "code": "PLCO",
+      "name": "KASB Bank Limited",
+      "type": "commercial",
+      "swift": "PLCOPKKA",
+      "status": "merged",
+      "successorCode": "BKIP"
+    },
+    {
+      "code": "SAMB",
+      "name": "Samba Bank Limited",
+      "type": "commercial",
+      "swift": "SAMBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "SAUD",
+      "name": "Silkbank Limited",
+      "type": "commercial",
+      "swift": "SAUDPKKA",
+      "status": "merged",
+      "successorCode": "UNIL"
+    },
+    {
+      "code": "SCBL",
+      "name": "Standard Chartered Bank (Pakistan) Limited",
+      "type": "commercial",
+      "swift": "SCBLPKKX",
+      "status": "active"
+    },
+    {
+      "code": "SIND",
+      "name": "Sindh Bank Limited",
+      "type": "commercial",
+      "swift": "SINDPKKA",
+      "status": "active"
+    },
+    {
+      "code": "SMES",
+      "name": "SME Bank Limited",
+      "type": "specialized",
+      "swift": "SMESPKK1",
+      "status": "defunct"
+    },
+    {
+      "code": "SONE",
+      "name": "Soneri Bank Limited",
+      "type": "commercial",
+      "swift": "SONEPKKA",
+      "status": "active"
+    },
+    {
+      "code": "SUMB",
+      "name": "Bank Makramah Limited",
+      "type": "commercial",
+      "swift": "SUMBPKKA",
+      "status": "active"
+    },
+    {
+      "code": "TMFB",
+      "name": "Easypaisa Bank Limited",
+      "type": "digital",
+      "swift": null,
+      "status": "active"
+    },
+    {
+      "code": "UMBL",
+      "name": "U Microfinance Bank Limited",
+      "type": "microfinance",
+      "swift": null,
+      "status": "active"
+    },
+    {
+      "code": "UNIL",
+      "name": "United Bank Limited",
+      "type": "commercial",
+      "swift": "UNILPKKA",
+      "status": "active"
+    },
+    {
+      "code": "WMBL",
+      "name": "Mobilink Microfinance Bank Limited",
+      "type": "microfinance",
+      "swift": null,
+      "status": "active"
+    },
+    {
+      "code": "ZTBL",
+      "name": "Zarai Taraqiati Bank Limited",
+      "type": "specialized",
+      "swift": null,
+      "status": "active"
+    }
   ]
 }
