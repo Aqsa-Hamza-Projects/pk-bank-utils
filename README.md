@@ -33,7 +33,7 @@ validateIBAN('PK36SCBL0000001123456702');
 
 getBankFromIBAN('PK36SCBL0000001123456702');
 // { code: 'SCBL', name: 'Standard Chartered Bank (Pakistan) Limited',
-//   type: 'commercial', swift: 'SCBLPKKX', status: 'active' }
+//   type: 'commercial', islamic: false, swift: 'SCBLPKKX', status: 'active' }
 ```
 
 ## Install
@@ -185,8 +185,8 @@ isn't in the registry.
 
 ```ts
 getBank('MEZN');
-// { code: 'MEZN', name: 'Meezan Bank Limited', type: 'islamic',
-//   swift: 'MEZNPKKA', status: 'active' }
+// { code: 'MEZN', name: 'Meezan Bank Limited', type: 'commercial',
+//   islamic: true, swift: 'MEZNPKKA', status: 'active' }
 ```
 
 ### `getBankFromIBAN(iban: string): Bank | null`
@@ -204,7 +204,7 @@ Case-insensitive substring match on bank name. An empty query returns `[]`
 ```ts
 searchBanks('alfalah');
 // [{ code: 'ALFH', name: 'Bank Alfalah Limited', type: 'commercial',
-//    swift: 'ALFHPKKA', status: 'active' }]
+//    islamic: false, swift: 'ALFHPKKA', status: 'active' }]
 ```
 
 ### `getBanks(): Bank[]`
@@ -230,17 +230,32 @@ affect the package's internal data).
 | `code`          | `string`              | 4-letter IBAN bank identifier (characters 5-8 of a PK IBAN) |
 | `name`          | `string`              | Bank's display name                                         |
 | `type`          | `BankType`            | Licence class — see below                                   |
+| `islamic`       | `boolean`             | Holds a full-fledged Islamic banking licence                |
 | `swift`         | `string \| null`      | 8-character head-office BIC; `null` for banks outside SWIFT |
 | `status`        | `BankStatus`          | `'active'`, `'merged'` or `'defunct'`                       |
 | `successorCode` | `string \| undefined` | For `status: 'merged'`, the `code` of the surviving bank    |
 
-`BankType` is `'commercial' | 'islamic' | 'microfinance' | 'digital' | 'specialized'`
-and `BankStatus` is `'active' | 'merged' | 'defunct'`. Both are exported.
+`BankType` is `'commercial' | 'microfinance' | 'digital' | 'specialized'` and
+`BankStatus` is `'active' | 'merged' | 'defunct'`. Both are exported.
 
-`type` records the **licence class, not the product range**. Most commercial
-banks run an Islamic window, so `'islamic'` is reserved for full-fledged
-Islamic banks — Faysal Bank is `'islamic'` because it surrendered its
-conventional licence in January 2023.
+**`type` and `islamic` are independent axes, deliberately.** Meezan, Dubai
+Islamic, BankIslami, MCB Islamic, Al Baraka and Faysal are all scheduled
+_commercial_ banks that hold an Islamic licence, so they are
+`type: 'commercial'` with `islamic: true`. Folding the two together would mean
+`banks.filter((b) => b.type === 'commercial')` silently dropped six of the
+largest retail networks in the country.
+
+```ts
+// every commercial bank, Islamic or not
+getBanks().filter((bank) => bank.type === 'commercial');
+
+// only the full-fledged Islamic banks
+getBanks().filter((bank) => bank.islamic);
+```
+
+`islamic` is about the **licence, not the product range**: a conventional bank
+running an Islamic window is `false`. Faysal Bank is `true` because it
+surrendered its conventional licence in January 2023.
 
 `swift` is `null` rather than absent for the banks that issue PK IBANs without
 holding a BIC. SWIFT membership serves cross-border correspondent banking, so a
@@ -252,7 +267,8 @@ resolve, and name the bank that took them over:
 ```ts
 getBankFromIBAN('PK24PLCO0000001123456702');
 // { code: 'PLCO', name: 'KASB Bank Limited', type: 'commercial',
-//   swift: 'PLCOPKKA', status: 'merged', successorCode: 'BKIP' }
+//   islamic: false, swift: 'PLCOPKKA', status: 'merged',
+//   successorCode: 'BKIP' }
 ```
 
 ## Bank registry — accuracy disclaimer

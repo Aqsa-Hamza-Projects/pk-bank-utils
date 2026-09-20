@@ -13,10 +13,18 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ### Added
 
-- `Bank` now carries `type`, `swift`, `status` and an optional `successorCode`,
-  so callers can tell a microfinance bank from a commercial one and can still
-  resolve an IBAN issued by a bank that has since merged.
-- `BankType` and `BankStatus` are exported.
+- `Bank` now carries `type`, `islamic`, `swift`, `status` and an optional
+  `successorCode`, so callers can tell a microfinance bank from a commercial
+  one and can still resolve an IBAN issued by a bank that has since merged.
+- `islamic` is a separate boolean rather than a `type` variant. Licence class
+  and Shariah compliance are independent: Meezan, Dubai Islamic, BankIslami,
+  MCB Islamic, Al Baraka and Faysal are scheduled _commercial_ banks holding an
+  Islamic licence, so `type: 'commercial'` with `islamic: true`. Folding them
+  into a single `'islamic'` type would make
+  `banks.filter((b) => b.type === 'commercial')` drop six of the largest retail
+  networks in Pakistan.
+- `BankType` and `BankStatus` are exported. `BankType` is
+  `'commercial' | 'microfinance' | 'digital' | 'specialized'`.
 - `_meta.sources` in `src/data/banks.json` records each source, its retrieval
   date and what it covers.
 

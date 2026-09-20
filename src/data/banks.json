@@ -35,13 +35,15 @@
       "code": "ABPA",
       "name": "Allied Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "ABPAPKKA",
       "status": "active"
     },
     {
       "code": "AIIN",
       "name": "Al Baraka Bank (Pakistan) Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "AIINPKKA",
       "status": "active"
     },
@@ -49,6 +51,7 @@
       "code": "ALFH",
       "name": "Bank Alfalah Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "ALFHPKKA",
       "status": "active"
     },
@@ -56,6 +59,7 @@
       "code": "ASCM",
       "name": "Askari Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "ASCMPKKA",
       "status": "active"
     },
@@ -63,6 +67,7 @@
       "code": "BAHL",
       "name": "Bank Al Habib Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "BAHLPKKA",
       "status": "active"
     },
@@ -70,13 +75,15 @@
       "code": "BKCH",
       "name": "Bank of China Limited - Pakistan Branch",
       "type": "commercial",
+      "islamic": false,
       "swift": "BKCHPKKA",
       "status": "active"
     },
     {
       "code": "BKIP",
       "name": "BankIslami Pakistan Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "BKIPPKKA",
       "status": "active"
     },
@@ -84,6 +91,7 @@
       "code": "BOTK",
       "name": "MUFG Bank, Ltd. - Pakistan",
       "type": "commercial",
+      "islamic": false,
       "swift": "BOTKPKKA",
       "status": "active"
     },
@@ -91,13 +99,15 @@
       "code": "BPUN",
       "name": "The Bank of Punjab",
       "type": "commercial",
+      "islamic": false,
       "swift": "BPUNPKKA",
       "status": "active"
     },
     {
       "code": "BURJ",
       "name": "Burj Bank Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "BURJPKKA",
       "status": "merged",
       "successorCode": "AIIN"
@@ -106,6 +116,7 @@
       "code": "CITI",
       "name": "Citibank N.A. - Pakistan",
       "type": "commercial",
+      "islamic": false,
       "swift": "CITIPKKX",
       "status": "active"
     },
@@ -113,20 +124,23 @@
       "code": "DEUT",
       "name": "Deutsche Bank AG - Pakistan",
       "type": "commercial",
+      "islamic": false,
       "swift": "DEUTPKKA",
       "status": "active"
     },
     {
       "code": "DUIB",
       "name": "Dubai Islamic Bank Pakistan Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "DUIBPKKA",
       "status": "active"
     },
     {
       "code": "FAYS",
       "name": "Faysal Bank Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "FAYSPKKA",
       "status": "active"
     },
@@ -134,6 +148,7 @@
       "code": "FMFB",
       "name": "The First MicroFinanceBank Limited",
       "type": "microfinance",
+      "islamic": false,
       "swift": null,
       "status": "active"
     },
@@ -141,6 +156,7 @@
       "code": "FWOM",
       "name": "First Women Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "FWOMPKKA",
       "status": "active"
     },
@@ -148,6 +164,7 @@
       "code": "HABB",
       "name": "Habib Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "HABBPKKA",
       "status": "active"
     },
@@ -155,6 +172,7 @@
       "code": "ICBK",
       "name": "Industrial and Commercial Bank of China - Pakistan",
       "type": "commercial",
+      "islamic": false,
       "swift": "ICBKPKKA",
       "status": "active"
     },
@@ -162,6 +180,7 @@
       "code": "JSBL",
       "name": "JS Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "JSBLPKKA",
       "status": "active"
     },
@@ -169,20 +188,23 @@
       "code": "KHYB",
       "name": "The Bank of Khyber",
       "type": "commercial",
+      "islamic": false,
       "swift": "KHYBPKKA",
       "status": "active"
     },
     {
       "code": "MCIB",
       "name": "MCB Islamic Bank Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "MCIBPKKI",
       "status": "active"
     },
     {
       "code": "MEZN",
       "name": "Meezan Bank Limited",
-      "type": "islamic",
+      "type": "commercial",
+      "islamic": true,
       "swift": "MEZNPKKA",
       "status": "active"
     },
@@ -190,6 +212,7 @@
       "code": "MPBL",
       "name": "Habib Metropolitan Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "MPBLPKKA",
       "status": "active"
     },
@@ -197,6 +220,7 @@
       "code": "MUCB",
       "name": "MCB Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "MUCBPKKA",
       "status": "active"
     },
@@ -204,6 +228,7 @@
       "code": "NBPA",
       "name": "National Bank of Pakistan",
       "type": "commercial",
+      "islamic": false,
       "swift": "NBPAPKKA",
       "status": "active"
     },
@@ -211,6 +236,7 @@
       "code": "NIBP",
       "name": "NIB Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "NIBPPKKA",
       "status": "merged",
       "successorCode": "MUCB"
@@ -219,6 +245,7 @@
       "code": "PLCO",
       "name": "KASB Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "PLCOPKKA",
       "status": "merged",
       "successorCode": "BKIP"
@@ -227,6 +254,7 @@
       "code": "SAMB",
       "name": "Samba Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SAMBPKKA",
       "status": "active"
     },
@@ -234,6 +262,7 @@
       "code": "SAUD",
       "name": "Silkbank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SAUDPKKA",
       "status": "merged",
       "successorCode": "UNIL"
@@ -242,6 +271,7 @@
       "code": "SCBL",
       "name": "Standard Chartered Bank (Pakistan) Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SCBLPKKX",
       "status": "active"
     },
@@ -249,6 +279,7 @@
       "code": "SIND",
       "name": "Sindh Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SINDPKKA",
       "status": "active"
     },
@@ -256,6 +287,7 @@
       "code": "SMES",
       "name": "SME Bank Limited",
       "type": "specialized",
+      "islamic": false,
       "swift": "SMESPKK1",
       "status": "defunct"
     },
@@ -263,6 +295,7 @@
       "code": "SONE",
       "name": "Soneri Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SONEPKKA",
       "status": "active"
     },
@@ -270,6 +303,7 @@
       "code": "SUMB",
       "name": "Bank Makramah Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "SUMBPKKA",
       "status": "active"
     },
@@ -277,6 +311,7 @@
       "code": "TMFB",
       "name": "Easypaisa Bank Limited",
       "type": "digital",
+      "islamic": false,
       "swift": null,
       "status": "active"
     },
@@ -284,6 +319,7 @@
       "code": "UMBL",
       "name": "U Microfinance Bank Limited",
       "type": "microfinance",
+      "islamic": false,
       "swift": null,
       "status": "active"
     },
@@ -291,6 +327,7 @@
       "code": "UNIL",
       "name": "United Bank Limited",
       "type": "commercial",
+      "islamic": false,
       "swift": "UNILPKKA",
       "status": "active"
     },
@@ -298,6 +335,7 @@
       "code": "WMBL",
       "name": "Mobilink Microfinance Bank Limited",
       "type": "microfinance",
+      "islamic": false,
       "swift": null,
       "status": "active"
     },
@@ -305,6 +343,7 @@
       "code": "ZTBL",
       "name": "Zarai Taraqiati Bank Limited",
       "type": "specialized",
+      "islamic": false,
       "swift": null,
       "status": "active"
     }

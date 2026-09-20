@@ -14,19 +14,14 @@ interface BanksFile {
     code: string;
     name: string;
     type: string;
+    islamic: boolean;
     swift: string | null;
     status: string;
     successorCode?: string;
   }[];
 }
 
-const BANK_TYPES = [
-  'commercial',
-  'islamic',
-  'microfinance',
-  'digital',
-  'specialized',
-];
+const BANK_TYPES = ['commercial', 'microfinance', 'digital', 'specialized'];
 const BANK_STATUSES = ['active', 'merged', 'defunct'];
 
 function mod97(digits: string): number {
@@ -100,6 +95,21 @@ describe('banks.json structure', () => {
     }
   });
 
+  it('gives every bank an explicit islamic flag', () => {
+    for (const bank of data.banks) {
+      expect(typeof bank.islamic, bank.code).toBe('boolean');
+    }
+  });
+
+  it('keeps the licence class independent of the islamic flag', () => {
+    // The regression this split exists to prevent: an Islamic bank is still
+    // a commercial bank, so filtering on type must not drop it.
+    const commercial = data.banks.filter((bank) => bank.type === 'commercial');
+    expect(commercial.map((bank) => bank.code)).toContain('MEZN');
+    expect(commercial.some((bank) => bank.islamic)).toBe(true);
+    expect(data.banks.some((bank) => bank.islamic)).toBe(true);
+  });
+
   it('gives every bank a null or well-formed 8-character BIC', () => {
     for (const bank of data.banks) {
       if (bank.swift === null) continue;
@@ -138,7 +148,6 @@ describe('banks.json structure', () => {
   it('covers the licence classes that issue PK IBANs', () => {
     const types = new Set(data.banks.map((bank) => bank.type));
     expect(types).toContain('commercial');
-    expect(types).toContain('islamic');
     expect(types).toContain('microfinance');
     expect(types).toContain('digital');
     expect(types).toContain('specialized');

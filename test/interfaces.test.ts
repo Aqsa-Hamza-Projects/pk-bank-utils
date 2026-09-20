@@ -17,6 +17,7 @@ describe('Bank', () => {
       code: 'PLCO',
       name: 'KASB Bank Limited',
       type: 'commercial',
+      islamic: false,
       swift: 'PLCOPKKA',
       status: 'merged',
       successorCode: 'BKIP',
@@ -30,6 +31,7 @@ describe('Bank', () => {
       code: 'UMBL',
       name: 'U Microfinance Bank Limited',
       type: 'microfinance',
+      islamic: false,
       swift: null,
       status: 'active',
     };
@@ -40,14 +42,13 @@ describe('Bank', () => {
   it('names every licence class and lifecycle status', () => {
     const types: BankType[] = [
       'commercial',
-      'islamic',
       'microfinance',
       'digital',
       'specialized',
     ];
     const statuses: BankStatus[] = ['active', 'merged', 'defunct'];
 
-    expect(types).toHaveLength(5);
+    expect(types).toHaveLength(4);
     expect(statuses).toHaveLength(3);
   });
 });
