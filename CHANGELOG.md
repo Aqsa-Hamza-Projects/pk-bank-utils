@@ -11,6 +11,8 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+## [0.0.4] — 2026-09-24
+
 ### Added
 
 - `Bank` now carries `type`, `islamic`, `swift`, `status` and an optional
@@ -30,11 +32,16 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ### Changed
 
-- The bank registry grew from 22 to 39 entries, rebuilt from the State Bank of
+- **Breaking** for code that constructs a `Bank` object: `type`, `islamic`,
+  `swift` and `status` are required fields. Code that only reads a `Bank` is
+  unaffected.
+- The bank registry grew from 22 to 40 entries, rebuilt from the State Bank of
   Pakistan's IBAN Guidelines and its Dams Fund IBAN notification, cross-checked
   against theswiftcodes.com. Adds Bank Al Habib, Samba, MCB Islamic, Citibank,
   Deutsche Bank, ICBC, Bank of China, MUFG, ZTBL, SME Bank, Easypaisa Bank and
-  three microfinance banks, plus the merged KASB, NIB and Burj banks.
+  four microfinance banks (HBL Microfinance under its IBAN code `FMFB`,
+  Mobilink, U Microfinance and Sindh Microfinance), plus the merged KASB, NIB
+  and Burj banks.
 - Three bank codes were corrected to the identifiers SBP actually publishes:
   `ALBA` to `AIIN` (Al Baraka), `SUMM` to `SUMB` (Summit, now Bank Makramah)
   and `FWBL` to `FWOM` (First Women Bank). SBP's IBAN Guidelines require the
@@ -50,11 +57,41 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
   These codes were never issued by SBP, so `getBankFromIBAN` could never have
   returned them, but a caller who hard-coded one will see the change.
 
-### Note for the release
+## [0.0.3] — 2026-09-24
 
-Adding required fields to `Bank` is source-compatible for code that reads a
-`Bank`, but breaking for code that constructs one. Together with the account
-strictness in PR-B2 this argues for 0.1.0 rather than 0.0.2.
+### Added
+
+- `explainIBAN(iban)` — reports which characters in the account field are
+  letters that were almost certainly meant to be digits, at which position,
+  and, when substituting all of them yields a checksum-valid IBAN, the IBAN
+  the user meant. `IBANValidationResult` gains the same `hints` and
+  `suggestion` fields.
+
+### Changed
+
+- **Breaking.** `validateIBAN` and `parseIBAN` now require the 16-character
+  account field to be digits only. Every SBP-licensed bank issues purely
+  numeric account fields, so a letter there is a typo — and when its MOD-97
+  checksum happened to pass, the package previously reported a wrong IBAN as
+  valid. Pass `{allowAlphanumericAccount: true}` as the second argument to
+  restore the ISO-registry-faithful `16!c` behaviour.
+
+## [0.0.2] — 2026-09-24
+
+### Fixed
+
+- `normalizeIBAN` now maps Arabic-Indic and Eastern-Arabic-Indic (Urdu)
+  digits and full-width characters to ASCII, strips every invisible Unicode
+  format character (zero-width spaces and joiners, the BOM, bidi marks and
+  isolates, the Arabic Letter Mark, soft hyphens) and treats any dash —
+  en dash, non-breaking hyphen, minus sign — as a separator. IBANs typed on
+  an Urdu keyboard or pasted from WhatsApp were previously rejected as
+  malformed. Every function that normalizes first — `validateIBAN`,
+  `parseIBAN`, `formatIBAN`, `maskIBAN`, `getBankFromIBAN` — accepts this
+  input as a result.
+- `validateIBAN` reports input made only of invisible characters or
+  separators as empty (`IBAN must be a non-empty string`) rather than as
+  `IBAN must be 24 characters, got 0`.
 
 ## [0.0.1] — 2026-09-14
 
