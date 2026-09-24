@@ -1,6 +1,6 @@
 {
   "name": "pk-bank-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Validate, parse, normalize, format and mask Pakistani IBANs, with a hand-curated bank-code directory. Zero-dependency TypeScript toolkit for Pakistani fintech, wallets, payroll, e-commerce and banking dashboards.",
   "keywords": [
     "pakistan",
@@ -62,7 +62,7 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "examples": "npm run build && tsx examples/01-validate-iban.ts && tsx examples/02-parse-iban.ts && tsx examples/03-bank-lookup.ts && tsx examples/04-masking.ts && node examples/05-commonjs.cjs && node examples/06-esm.mjs",
+    "examples": "npm run build && tsx examples/01-validate-iban.ts && tsx examples/02-parse-iban.ts && tsx examples/03-bank-lookup.ts && tsx examples/04-masking.ts && tsx examples/07-explain-iban.ts && node examples/05-commonjs.cjs && node examples/06-esm.mjs",
     "hooks:install": "husky",
     "prepublishOnly": "npm run typecheck && npm run lint && npm run format:check && npm run build && npm test && npm run examples"
   },
