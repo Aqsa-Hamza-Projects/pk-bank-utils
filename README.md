@@ -140,9 +140,11 @@ checking validity.
 
 ### `normalizeIBAN(iban: string): string`
 
-Uppercases and strips whitespace/dashes. Also maps Arabic-Indic and
-Eastern-Arabic-Indic (Urdu) digits to ASCII and removes zero-width
-characters, the BOM, bidi marks and non-breaking spaces — the invisible
+Uppercases and strips whitespace and any dash (hyphen, en dash,
+non-breaking hyphen, minus). Also maps Arabic-Indic and Eastern-Arabic-Indic
+(Urdu) digits and full-width characters to ASCII, and removes every
+invisible Unicode format character — zero-width spaces and joiners, the BOM,
+bidi marks and isolates, the Arabic Letter Mark, soft hyphens — the invisible
 passengers that ride along when an IBAN is pasted from WhatsApp or a bank
 app's share sheet. Does not validate.
 
