@@ -171,6 +171,26 @@ describe('bank codes reported unresolved in FINDINGS PR-B3', () => {
   });
 });
 
+describe('live IBANs from the SBP Dams Fund notification', () => {
+  // Published IBANs, not built ones — rows 36 and 38 of the notification.
+  it.each([
+    ['PK16FMFB0021011474997014', 'FMFB', 'HBL Microfinance Bank Limited'],
+    ['PK94SMFB0001070000060066', 'SMFB', 'Sindh Microfinance Bank Limited'],
+  ])('%s resolves to %s', (iban, code, name) => {
+    expect(validateIBAN(iban).valid).toBe(true);
+    const bank = getBankFromIBAN(iban);
+    expect(bank?.code).toBe(code);
+    expect(bank?.name).toBe(name);
+  });
+
+  it('does not attribute SBPP to a commercial bank', () => {
+    // The notification prints FINCA's IBAN with SBPP, but SBPP is the State
+    // Bank's own BIC prefix (SBPPPKKA); mapping it to FINCA would mislabel
+    // every IBAN held at the central bank.
+    expect(getBankFromIBAN('PK33SBPP0020341006870018')).toBeNull();
+  });
+});
+
 describe('merged banks still resolve old IBANs', () => {
   it.each([
     ['PLCO', 'BKIP'], // KASB Bank -> BankIslami, 2015

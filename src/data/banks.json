@@ -146,7 +146,7 @@
     },
     {
       "code": "FMFB",
-      "name": "The First MicroFinanceBank Limited",
+      "name": "HBL Microfinance Bank Limited",
       "type": "microfinance",
       "islamic": false,
       "swift": null,
@@ -290,6 +290,14 @@
       "islamic": false,
       "swift": "SMESPKK1",
       "status": "defunct"
+    },
+    {
+      "code": "SMFB",
+      "name": "Sindh Microfinance Bank Limited",
+      "type": "microfinance",
+      "islamic": false,
+      "swift": null,
+      "status": "active"
     },
     {
       "code": "SONE",

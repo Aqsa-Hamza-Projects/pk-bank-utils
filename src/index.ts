@@ -3,6 +3,8 @@ export type {
   IBANExplanation,
   IBANHint,
   Bank,
+  BankType,
+  BankStatus,
 } from './interfaces/index.js';
 export {validateIBAN, parseIBAN} from './iban/validate.js';
 export type {ValidateIBANOptions} from './iban/validate.js';

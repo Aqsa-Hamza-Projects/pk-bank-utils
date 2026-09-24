@@ -1,11 +1,24 @@
 import {describe, it, expect} from 'vitest';
 import {COUNTRY_CODE, IBAN_LENGTH} from '../src/constants.js';
 import type {Bank, BankType, BankStatus} from '../src/interfaces/index.js';
+import type {
+  BankType as PublicBankType,
+  BankStatus as PublicBankStatus,
+} from '../src/index.js';
 
 describe('constants', () => {
   it('defines the Pakistan IBAN shape', () => {
     expect(COUNTRY_CODE).toBe('PK');
     expect(IBAN_LENGTH).toBe(24);
+  });
+});
+
+describe('package entry', () => {
+  it('exports BankType and BankStatus', () => {
+    // Compile-time check: tsc fails if the entry stops exporting them.
+    const type: PublicBankType = 'microfinance';
+    const status: PublicBankStatus = 'active';
+    expect([type, status]).toEqual(['microfinance', 'active']);
   });
 });
 
