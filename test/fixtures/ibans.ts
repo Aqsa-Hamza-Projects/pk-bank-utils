@@ -35,3 +35,26 @@ export const BIDI_MARK_VALID_IBAN = '\u202APK36SCBL0000001123456702\u202C';
 export const MIXED_UNICODE_VALID_IBAN =
   'PK36\u200BSCBL\u00A0\u06F0\u06F0\u06F0\u06F0\u06F0\u06F0\u06F1\u06F1\u06F2\u06F3\u06F4\u06F5\u06F6\u06F7\u06F0\u06F2';
 export const BOM_VALID_IBAN = '\uFEFFPK36SCBL0000001123456702';
+
+// Account fields carrying letters. Every SBP-licensed bank issues a purely
+// numeric 16-digit account field, so a letter here is always a typo. The
+// first one is the dangerous case: its MOD-97 checksum passes by coincidence,
+// so before PR-B2 the package reported a wrong IBAN as valid.
+export const LETTER_O_ACCOUNT_IBAN = 'PK36SCBLO000001123456702';
+export const ALL_LETTER_O_ACCOUNT_IBAN = 'PK36SCBLOOOOOO1123456702';
+
+// 'S' maps to '5', but the substitution fails MOD-97 — we may point at the
+// character without claiming to know the whole IBAN.
+export const UNRECOVERABLE_ACCOUNT_IBAN = 'PK36SCBLS000001123456702';
+
+// 'X' is not visually confusable with any digit, so no substitution can be
+// claimed and no suggestion may be offered.
+export const UNMAPPABLE_LETTER_ACCOUNT_IBAN = 'PK36SCBLX000001123456702';
+
+// Both letter-O fixtures are one substitution away from this, which is
+// VALID_IBANS[0].
+export const RECOVERED_IBAN = 'PK36SCBL0000001123456702';
+
+// A mappable 'O' next to an unmappable 'X'. No substitution can be attempted
+// at all here, so the explanation must not claim one was tried and failed.
+export const MIXED_TYPO_ACCOUNT_IBAN = 'PK36SCBLOX00001123456702';

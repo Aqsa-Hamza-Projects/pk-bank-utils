@@ -5,6 +5,7 @@ describe('public API shape', () => {
   it('exports exactly the documented surface', () => {
     expect(Object.keys(api).sort()).toEqual(
       [
+        'explainIBAN',
         'formatIBAN',
         'getBank',
         'getBankFromIBAN',
@@ -33,6 +34,10 @@ describe('public API shape', () => {
     });
     // @ts-expect-error deliberate bad input
     expect(() => api.parseIBAN(undefined)).not.toThrow();
+    // @ts-expect-error deliberate bad input
+    expect(() => api.explainIBAN(null)).not.toThrow();
+    // @ts-expect-error deliberate bad input
+    expect(() => api.explainIBAN(123)).not.toThrow();
     // @ts-expect-error deliberate bad input
     expect(api.normalizeIBAN(null)).toBe('');
     // @ts-expect-error deliberate bad input

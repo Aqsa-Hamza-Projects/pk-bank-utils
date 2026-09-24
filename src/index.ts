@@ -1,5 +1,12 @@
-export type {IBANValidationResult, Bank} from './interfaces/index.js';
+export type {
+  IBANValidationResult,
+  IBANExplanation,
+  IBANHint,
+  Bank,
+} from './interfaces/index.js';
 export {validateIBAN, parseIBAN} from './iban/validate.js';
+export type {ValidateIBANOptions} from './iban/validate.js';
+export {explainIBAN} from './iban/explain.js';
 export {normalizeIBAN} from './iban/normalize.js';
 export {formatIBAN} from './iban/format.js';
 export {maskIBAN} from './iban/mask.js';
