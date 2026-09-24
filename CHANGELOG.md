@@ -11,6 +11,52 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+## [0.0.4] — 2026-09-24
+
+### Added
+
+- `Bank` now carries `type`, `islamic`, `swift`, `status` and an optional
+  `successorCode`, so callers can tell a microfinance bank from a commercial
+  one and can still resolve an IBAN issued by a bank that has since merged.
+- `islamic` is a separate boolean rather than a `type` variant. Licence class
+  and Shariah compliance are independent: Meezan, Dubai Islamic, BankIslami,
+  MCB Islamic, Al Baraka and Faysal are scheduled _commercial_ banks holding an
+  Islamic licence, so `type: 'commercial'` with `islamic: true`. Folding them
+  into a single `'islamic'` type would make
+  `banks.filter((b) => b.type === 'commercial')` drop six of the largest retail
+  networks in Pakistan.
+- `BankType` and `BankStatus` are exported. `BankType` is
+  `'commercial' | 'microfinance' | 'digital' | 'specialized'`.
+- `_meta.sources` in `src/data/banks.json` records each source, its retrieval
+  date and what it covers.
+
+### Changed
+
+- **Breaking** for code that constructs a `Bank` object: `type`, `islamic`,
+  `swift` and `status` are required fields. Code that only reads a `Bank` is
+  unaffected.
+- The bank registry grew from 22 to 40 entries, rebuilt from the State Bank of
+  Pakistan's IBAN Guidelines and its Dams Fund IBAN notification, cross-checked
+  against theswiftcodes.com. Adds Bank Al Habib, Samba, MCB Islamic, Citibank,
+  Deutsche Bank, ICBC, Bank of China, MUFG, ZTBL, SME Bank, Easypaisa Bank and
+  four microfinance banks (HBL Microfinance under its IBAN code `FMFB`,
+  Mobilink, U Microfinance and Sindh Microfinance), plus the merged KASB, NIB
+  and Burj banks.
+- Three bank codes were corrected to the identifiers SBP actually publishes:
+  `ALBA` to `AIIN` (Al Baraka), `SUMM` to `SUMB` (Summit, now Bank Makramah)
+  and `FWBL` to `FWOM` (First Women Bank). SBP's IBAN Guidelines require the
+  bank identifier to be the first four letters of the bank's SWIFT BIC; the old
+  values were the banks' acronyms and appear in no source, so no real IBAN
+  could have contained them.
+- Bank names now use their full legal form, for example `Meezan Bank` became
+  `Meezan Bank Limited`.
+
+### Removed
+
+- `getBank('ALBA')`, `getBank('SUMM')` and `getBank('FWBL')` now return `null`.
+  These codes were never issued by SBP, so `getBankFromIBAN` could never have
+  returned them, but a caller who hard-coded one will see the change.
+
 ## [0.0.3] — 2026-09-24
 
 ### Added

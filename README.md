@@ -32,7 +32,8 @@ validateIBAN('PK36SCBL0000001123456702');
 // { valid: true, country: 'PK', checkDigits: '36', bankCode: 'SCBL', accountNumber: '0000001123456702' }
 
 getBankFromIBAN('PK36SCBL0000001123456702');
-// { code: 'SCBL', name: 'Standard Chartered Bank (Pakistan) Limited' }
+// { code: 'SCBL', name: 'Standard Chartered Bank (Pakistan) Limited',
+//   type: 'commercial', islamic: false, swift: 'SCBLPKKX', status: 'active' }
 ```
 
 ## Install
@@ -243,7 +244,8 @@ isn't in the registry.
 
 ```ts
 getBank('MEZN');
-// { code: 'MEZN', name: 'Meezan Bank' }
+// { code: 'MEZN', name: 'Meezan Bank Limited', type: 'commercial',
+//   islamic: true, swift: 'MEZNPKKA', status: 'active' }
 ```
 
 ### `getBankFromIBAN(iban: string): Bank | null`
@@ -260,7 +262,8 @@ Case-insensitive substring match on bank name. An empty query returns `[]`
 
 ```ts
 searchBanks('alfalah');
-// [{ code: 'ALFH', name: 'Bank Alfalah Limited' }]
+// [{ code: 'ALFH', name: 'Bank Alfalah Limited', type: 'commercial',
+//    islamic: false, swift: 'ALFHPKKA', status: 'active' }]
 ```
 
 ### `getBanks(): Bank[]`
@@ -302,21 +305,73 @@ affect the package's internal data).
 
 ### `Bank`
 
-| Field  | Type     | Notes                    |
-| ------ | -------- | ------------------------ |
-| `code` | `string` | 4-letter bank identifier |
-| `name` | `string` | Bank's display name      |
+| Field           | Type                  | Notes                                                       |
+| --------------- | --------------------- | ----------------------------------------------------------- |
+| `code`          | `string`              | 4-letter IBAN bank identifier (characters 5-8 of a PK IBAN) |
+| `name`          | `string`              | Bank's display name                                         |
+| `type`          | `BankType`            | Licence class — see below                                   |
+| `islamic`       | `boolean`             | Holds a full-fledged Islamic banking licence                |
+| `swift`         | `string \| null`      | 8-character head-office BIC; `null` for banks outside SWIFT |
+| `status`        | `BankStatus`          | `'active'`, `'merged'` or `'defunct'`                       |
+| `successorCode` | `string \| undefined` | For `status: 'merged'`, the `code` of the surviving bank    |
+
+`BankType` is `'commercial' | 'microfinance' | 'digital' | 'specialized'` and
+`BankStatus` is `'active' | 'merged' | 'defunct'`. Both are exported.
+
+**`type` and `islamic` are independent axes, deliberately.** Meezan, Dubai
+Islamic, BankIslami, MCB Islamic, Al Baraka and Faysal are all scheduled
+_commercial_ banks that hold an Islamic licence, so they are
+`type: 'commercial'` with `islamic: true`. Folding the two together would mean
+`banks.filter((b) => b.type === 'commercial')` silently dropped six of the
+largest retail networks in the country.
+
+```ts
+// every commercial bank, Islamic or not
+getBanks().filter((bank) => bank.type === 'commercial');
+
+// only the full-fledged Islamic banks
+getBanks().filter((bank) => bank.islamic);
+```
+
+`islamic` is about the **licence, not the product range**: a conventional bank
+running an Islamic window is `false`. Faysal Bank is `true` because it
+surrendered its conventional licence in January 2023.
+
+`swift` is `null` rather than absent for the banks that issue PK IBANs without
+holding a BIC. SWIFT membership serves cross-border correspondent banking, so a
+domestic-only microfinance bank has no need of one.
+
+Merged banks stay in the registry so that IBANs issued before the merger still
+resolve, and name the bank that took them over:
+
+```ts
+getBankFromIBAN('PK24PLCO0000001123456702');
+// { code: 'PLCO', name: 'KASB Bank Limited', type: 'commercial',
+//   islamic: false, swift: 'PLCOPKKA', status: 'merged',
+//   successorCode: 'BKIP' }
+```
 
 ## Bank registry — accuracy disclaimer
 
 The bank-code directory (`getBank`, `getBankFromIBAN`, `searchBanks`,
-`getBanks`) is a **hand-curated, best-effort list** compiled from public
-bank and IBAN-format documentation — it is not sourced from an automated
-feed of the State Bank of Pakistan's official registry. Codes, names, and
-which banks are listed may lag real-world changes, renamings, mergers, or
-new entrants. Do not rely on it for compliance-sensitive decisions; verify
-against your own bank or payment processor. Corrections and additions are
-welcome via a pull request against `src/data/banks.json`.
+`getBanks`) is compiled from the State Bank of
+Pakistan's own documents: the [IBAN Guidelines (PSD Circular Letter No. 02 of 2012)](https://archive.sbp.org.pk/psd/2012/IBAN-Guidelines-CL02-2012.pdf),
+which establish that the IBAN bank identifier is the first four letters of the
+bank's SWIFT BIC, and the [Dams Fund IBAN
+notification](https://archive.sbp.org.pk/notifications/FD/DamFund/Detail-1.pdf),
+which publishes live IBANs for 36 institutions — including the microfinance
+banks that no SWIFT directory lists. Both were cross-checked against
+[theswiftcodes.com/pakistan](https://www.theswiftcodes.com/pakistan/). The
+registry's size and its verification date are whatever `src/data/banks.json`
+says: see `_meta.lastVerified` and the per-source `_meta.sources`.
+
+It is still a point-in-time snapshot rather than an automated feed, and it is
+**deliberately incomplete**: a bank is listed only when its code was found in a
+source, so several licensed microfinance and digital banks are absent rather
+than guessed. Codes, names and coverage may lag renames, mergers and new
+entrants. Do not rely on it for compliance-sensitive decisions; verify against
+your own bank or payment processor. Corrections and additions are welcome via a
+pull request against `src/data/banks.json` — please cite a source.
 
 ## What this package does **not** do
 

@@ -3,16 +3,16 @@ import {getAllBanks, findBankByCode} from '../src/banks/registry.js';
 
 describe('bank registry', () => {
   it('finds a bank by exact code', () => {
-    expect(findBankByCode('MEZN')).toEqual({
+    expect(findBankByCode('MEZN')).toMatchObject({
       code: 'MEZN',
-      name: 'Meezan Bank',
+      name: 'Meezan Bank Limited',
     });
   });
 
   it('is case-insensitive', () => {
-    expect(findBankByCode('mezn')).toEqual({
+    expect(findBankByCode('mezn')).toMatchObject({
       code: 'MEZN',
-      name: 'Meezan Bank',
+      name: 'Meezan Bank Limited',
     });
   });
 
