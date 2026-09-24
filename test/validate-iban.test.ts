@@ -105,6 +105,15 @@ describe('validateIBAN', () => {
     });
   });
 
+  it('treats input of only invisible characters or separators as empty', () => {
+    for (const input of ['\u200B', '\u2066\u2069', ' - ', '\uFEFF']) {
+      expect(validateIBAN(input)).toEqual({
+        valid: false,
+        reason: 'IBAN must be a non-empty string',
+      });
+    }
+  });
+
   it('never throws on non-string input', () => {
     // @ts-expect-error deliberate bad input
     expect(() => validateIBAN(null)).not.toThrow();

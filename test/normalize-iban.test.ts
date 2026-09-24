@@ -71,6 +71,26 @@ describe('normalizeIBAN', () => {
     expect(normalizeIBAN(MIXED_UNICODE_VALID_IBAN)).toBe(EXPECTED);
   });
 
+  it.each([
+    ['bidi isolates (U+2066/U+2069)', `\u2066${EXPECTED}\u2069`],
+    ['Arabic Letter Mark (U+061C)', `\u061C${EXPECTED}`],
+    ['word joiner (U+2060)', `PK36SCBL\u20600000001123456702`],
+    ['soft hyphen (U+00AD)', `PK36SCBL\u00AD0000001123456702`],
+    [
+      'en dash separator',
+      'PK36\u2013SCBL\u20130000\u20130011\u20132345\u20136702',
+    ],
+    ['non-breaking hyphen (U+2011)', 'PK36\u2011SCBL0000001123456702'],
+    ['minus sign (U+2212)', 'PK36\u2212SCBL0000001123456702'],
+    ['narrow no-break space (U+202F)', 'PK36\u202FSCBL0000001123456702'],
+    [
+      'full-width letters and digits',
+      '\uFF30\uFF2B\uFF13\uFF16SCBL0000001123456702',
+    ],
+  ])('strips or folds %s', (_label, input) => {
+    expect(normalizeIBAN(input)).toBe(EXPECTED);
+  });
+
   it('leaves non-digit non-Latin characters alone', () => {
     // Urdu letters are neither digits nor invisible — they survive, so the
     // caller still sees garbage in, garbage out rather than silent damage.
