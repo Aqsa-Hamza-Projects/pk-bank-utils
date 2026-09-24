@@ -124,8 +124,9 @@ validateIBAN('not an iban');
 // { valid: false, reason: 'IBAN must be 24 characters, got 9' }
 ```
 
-Accepts lowercase, spaced, and dashed input — it normalizes internally
-before validating.
+Accepts lowercase, spaced, and dashed input, Urdu and Arabic-Indic digits,
+and text carrying invisible characters from a copy-paste — it normalizes
+internally before validating.
 
 Bank-code recognition is **not** part of validity: an IBAN with an unknown
 4-letter bank code can still be `valid: true`. Use `getBankFromIBAN` to
@@ -139,7 +140,13 @@ checking validity.
 
 ### `normalizeIBAN(iban: string): string`
 
-Uppercases and strips whitespace/dashes. Does not validate.
+Uppercases and strips whitespace and any dash (hyphen, en dash,
+non-breaking hyphen, minus). Also maps Arabic-Indic and Eastern-Arabic-Indic
+(Urdu) digits and full-width characters to ASCII, and removes every
+invisible Unicode format character — zero-width spaces and joiners, the BOM,
+bidi marks and isolates, the Arabic Letter Mark, soft hyphens — the invisible
+passengers that ride along when an IBAN is pasted from WhatsApp or a bank
+app's share sheet. Does not validate.
 
 ```ts
 normalizeIBAN('pk36 scbl 0000 0011 2345 6702');

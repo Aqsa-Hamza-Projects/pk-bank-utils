@@ -8,11 +8,12 @@ const BANK_CODE_PATTERN = /^[A-Z]{4}$/;
 const ACCOUNT_NUMBER_PATTERN = /^[A-Z0-9]{16}$/;
 
 export function validateIBAN(iban: string): IBANValidationResult {
-  if (typeof iban !== 'string' || iban.trim() === '') {
+  const normalized = normalizeIBAN(iban);
+  // Checked after normalizing: input made only of separators or invisible
+  // characters is empty too, not "0 characters long".
+  if (normalized === '') {
     return {valid: false, reason: 'IBAN must be a non-empty string'};
   }
-
-  const normalized = normalizeIBAN(iban);
 
   if (normalized.length !== IBAN_LENGTH) {
     return {
