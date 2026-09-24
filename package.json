@@ -1,6 +1,6 @@
 {
   "name": "pk-bank-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Validate, parse, normalize, format and mask Pakistani IBANs, with a hand-curated bank-code directory. Zero-dependency TypeScript toolkit for Pakistani fintech, wallets, payroll, e-commerce and banking dashboards.",
   "keywords": [
     "pakistan",
@@ -55,7 +55,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "node init && tsup",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
