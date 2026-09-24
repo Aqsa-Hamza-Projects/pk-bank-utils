@@ -27,11 +27,12 @@ export function validateIBAN(
   iban: string,
   options?: ValidateIBANOptions
 ): IBANValidationResult {
-  if (typeof iban !== 'string' || iban.trim() === '') {
+  const normalized = normalizeIBAN(iban);
+  // Checked after normalizing: input made only of separators or invisible
+  // characters is empty too, not "0 characters long".
+  if (normalized === '') {
     return {valid: false, reason: 'IBAN must be a non-empty string'};
   }
-
-  const normalized = normalizeIBAN(iban);
 
   if (normalized.length !== IBAN_LENGTH) {
     return {

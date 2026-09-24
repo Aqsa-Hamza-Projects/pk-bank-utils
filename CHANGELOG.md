@@ -11,6 +11,8 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+## [0.0.3] — 2026-09-24
+
 ### Added
 
 - `explainIBAN(iban)` — reports which characters in the account field are
@@ -28,14 +30,22 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
   valid. Pass `{allowAlphanumericAccount: true}` as the second argument to
   restore the ISO-registry-faithful `16!c` behaviour.
 
+## [0.0.2] — 2026-09-24
+
 ### Fixed
 
 - `normalizeIBAN` now maps Arabic-Indic and Eastern-Arabic-Indic (Urdu)
-  digits to ASCII and strips zero-width characters, the BOM, bidi marks and
-  non-breaking spaces. IBANs typed on an Urdu keyboard or pasted from
-  WhatsApp were previously rejected as malformed. Every function that
-  normalizes first — `validateIBAN`, `parseIBAN`, `formatIBAN`, `maskIBAN`,
-  `getBankFromIBAN` — accepts this input as a result.
+  digits and full-width characters to ASCII, strips every invisible Unicode
+  format character (zero-width spaces and joiners, the BOM, bidi marks and
+  isolates, the Arabic Letter Mark, soft hyphens) and treats any dash —
+  en dash, non-breaking hyphen, minus sign — as a separator. IBANs typed on
+  an Urdu keyboard or pasted from WhatsApp were previously rejected as
+  malformed. Every function that normalizes first — `validateIBAN`,
+  `parseIBAN`, `formatIBAN`, `maskIBAN`, `getBankFromIBAN` — accepts this
+  input as a result.
+- `validateIBAN` reports input made only of invisible characters or
+  separators as empty (`IBAN must be a non-empty string`) rather than as
+  `IBAN must be 24 characters, got 0`.
 
 ## [0.0.1] — 2026-09-14
 
