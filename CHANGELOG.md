@@ -11,6 +11,25 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+## [0.0.3] — 2026-09-24
+
+### Added
+
+- `explainIBAN(iban)` — reports which characters in the account field are
+  letters that were almost certainly meant to be digits, at which position,
+  and, when substituting all of them yields a checksum-valid IBAN, the IBAN
+  the user meant. `IBANValidationResult` gains the same `hints` and
+  `suggestion` fields.
+
+### Changed
+
+- **Breaking.** `validateIBAN` and `parseIBAN` now require the 16-character
+  account field to be digits only. Every SBP-licensed bank issues purely
+  numeric account fields, so a letter there is a typo — and when its MOD-97
+  checksum happened to pass, the package previously reported a wrong IBAN as
+  valid. Pass `{allowAlphanumericAccount: true}` as the second argument to
+  restore the ISO-registry-faithful `16!c` behaviour.
+
 ## [0.0.2] — 2026-09-24
 
 ### Fixed
