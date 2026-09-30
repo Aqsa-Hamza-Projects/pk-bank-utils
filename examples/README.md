@@ -12,5 +12,6 @@ Run all of them (builds first): `npm run examples`
 | `03-bank-lookup.ts`   | `getBankFromIBAN`, `getBank`, `searchBanks`, `getBanks`   |
 | `04-masking.ts`       | `formatIBAN`, `maskIBAN`, `maskAccountNumber`             |
 | `07-explain-iban.ts`  | `explainIBAN` on mistyped IBANs, and the leniency opt-out |
+| `08-raast.ts`         | `detectIdentifier`, `validateRaastId`, `maskRaastId`      |
 | `05-commonjs.cjs`     | Plain-JS `require()` (CommonJS) consumer proof            |
 | `06-esm.mjs`          | Plain-JS `import` (ESM) consumer proof                    |

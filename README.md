@@ -72,6 +72,9 @@ import {
   getBankFromIBAN,
   searchBanks,
   getBanks,
+  detectIdentifier,
+  validateRaastId,
+  maskRaastId,
   type IBANValidationResult,
   type Bank,
 } from 'pk-bank-utils';
@@ -106,9 +109,14 @@ All exports come from the package root (`pk-bank-utils`).
 | `getBankFromIBAN`   | `(iban: string) => Bank \| null`                                        |
 | `searchBanks`       | `(query: string) => Bank[]`                                             |
 | `getBanks`          | `() => Bank[]`                                                          |
+| `detectIdentifier`  | `(input: string) => IdentifierDetection`                                |
+| `validateRaastId`   | `(input: string) => RaastValidationResult`                              |
+| `maskRaastId`       | `(input: string) => string`                                             |
 
 Plus the exported types `IBANValidationResult`, `IBANExplanation`,
-`IBANHint`, `ValidateIBANOptions` and `Bank`.
+`IBANHint`, `ValidateIBANOptions`, `Bank`, `BankType`, `BankStatus`,
+`RaastValidationResult`, `IdentifierKind`, `IdentifierCandidate` and
+`IdentifierDetection`.
 
 ### `validateIBAN(iban: string, options?: ValidateIBANOptions): IBANValidationResult`
 
@@ -235,6 +243,81 @@ rest. Input of 4 characters or fewer is returned unchanged.
 ```ts
 maskAccountNumber('0000001123456702');
 // '************6702'
+```
+
+### Raast IDs
+
+A **Raast ID** is a Pakistani mobile number linked to a bank account, used to
+send and receive money under the State Bank of Pakistan's Raast instant
+payment scheme: https://www.sbp.org.pk/dfs/Raast-P2P.html
+
+Bank documentation states it directly. MCB Islamic's Raast FAQ: _"A Raast ID
+is your mobile number that is linked to your bank account"_ — and, for the
+recipient field, _"Enter the recipient's Raast ID (mobile number or IBAN)"_.
+That one field taking either form is what `detectIdentifier` is for.
+https://www.mcbislamicbank.com/personal/digital-banking/raast-payment-faqs/
+
+`validateRaastId` and `maskRaastId` accept the same mobile number shapes a
+user might paste: national (`03001234567`), with `+92`, `0092` or bare `92`
+country-code prefixes, with spaces, any kind of dash, dots or parentheses as
+separators, and with Urdu, Arabic-Indic or full-width digits. They share their
+cleanup with `normalizeIBAN`, so the two agree on what an invisible formatting
+character and a dash are.
+
+#### `validateRaastId(input: string): RaastValidationResult`
+
+Structural validation only — 11 digits, starting with `03`. Never throws;
+malformed input returns `{ valid: false, reason: '...' }`.
+
+```ts
+validateRaastId('+92 300 1234567');
+// { valid: true, normalized: '03001234567', allocatedOperator: 'Jazz', knownPrefix: true }
+
+validateRaastId('12345');
+// { valid: false, reason: 'Raast ID must be 11 digits, got 5' }
+```
+
+| Field               | Type                  | Notes                                                     |
+| ------------------- | --------------------- | --------------------------------------------------------- |
+| `valid`             | `boolean`             | `true` once the number is 11 digits and starts with `03`  |
+| `normalized`        | `string \| undefined` | The national `03XXXXXXXXX` form — present only when valid |
+| `allocatedOperator` | `string \| null`      | See the caveat below — present only when valid            |
+| `knownPrefix`       | `boolean`             | Whether the prefix matched a known allocation range       |
+| `reason`            | `string \| undefined` | Present only when `valid: false`                          |
+
+> `allocatedOperator` reports the operator a number's prefix block was
+> **allocated** to. Pakistan has had mobile number portability since 2007,
+> so it is not necessarily the carrier serving that number today — never
+> use it to route a payment or score a transaction. An unrecognised prefix
+> returns `allocatedOperator: null` and `knownPrefix: false`; it is still
+> `valid: true`, because a number is not fake merely because our table has
+> not caught up with a new PTA allocation.
+
+#### `maskRaastId(input: string): string`
+
+Keeps the 4-digit operator prefix and last 2 digits visible; masks the
+rest. Malformed input is masked conservatively (via `maskAccountNumber`)
+rather than passed through unmasked.
+
+```ts
+maskRaastId('+92 300 1234567');
+// '0300*****67'
+```
+
+#### `detectIdentifier(input: string): IdentifierDetection`
+
+Distinguishes an IBAN, a Raast ID and a generic account number from a
+single free-text input — useful for a form with one box for "IBAN or
+Raast ID". Returns a best-guess `kind` plus ranked `candidates`, since an
+11-digit `03` number is both a valid Raast ID and a plausible account
+number.
+
+```ts
+detectIdentifier('+92 300 1234567');
+// { kind: 'raast-mobile', normalized: '03001234567', candidates: [
+//   { kind: 'raast-mobile', confidence: 'high' },
+//   { kind: 'account-number', confidence: 'low' },
+// ] }
 ```
 
 ### `getBank(code: string): Bank | null`
@@ -383,8 +466,11 @@ pull request against `src/data/banks.json` — please cite a source.
   checksum-confirmed correction of visually confusable characters only
   (O↔0, I/L↔1, S↔5, B↔8, Z↔2, G↔6). It does not claim the account exists.
 - **Does not validate non-Pakistani IBANs.**
-- **Does not include SWIFT/BIC parsing, Raast identifiers, or phone-number
-  utilities** in this release.
+- **Does not include SWIFT/BIC parsing or general phone-number utilities**
+  in this release.
+- **`allocatedOperator` is not live carrier data.** See the portability
+  caveat under [Raast IDs](#raast-ids) — it must never be used to route a
+  payment.
 
 ## Examples
 
@@ -402,6 +488,7 @@ npm run examples
 | `02-parse-iban.ts`    | Destructuring the parsed fields of a valid IBAN         |
 | `03-bank-lookup.ts`   | `getBankFromIBAN`, `getBank`, `searchBanks`, `getBanks` |
 | `04-masking.ts`       | `formatIBAN`, `maskIBAN`, `maskAccountNumber`           |
+| `08-raast.ts`         | `detectIdentifier`, `validateRaastId`, `maskRaastId`    |
 | `05-commonjs.cjs`     | the CommonJS build via `require('pk-bank-utils')`       |
 | `06-esm.mjs`          | the ESM build via `import` in plain JavaScript          |
 

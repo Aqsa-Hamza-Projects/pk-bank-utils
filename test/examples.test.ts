@@ -20,6 +20,7 @@ describe('examples', () => {
     'examples/03-bank-lookup.ts',
     'examples/04-masking.ts',
     'examples/07-explain-iban.ts',
+    'examples/08-raast.ts',
   ])('%s runs and exits 0 (TypeScript via tsx)', (file) => {
     expect(() => run('npx', ['tsx', file])).not.toThrow();
   });

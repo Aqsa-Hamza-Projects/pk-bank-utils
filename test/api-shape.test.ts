@@ -5,6 +5,7 @@ describe('public API shape', () => {
   it('exports exactly the documented surface', () => {
     expect(Object.keys(api).sort()).toEqual(
       [
+        'detectIdentifier',
         'explainIBAN',
         'formatIBAN',
         'getBank',
@@ -12,10 +13,12 @@ describe('public API shape', () => {
         'getBanks',
         'maskAccountNumber',
         'maskIBAN',
+        'maskRaastId',
         'normalizeIBAN',
         'parseIBAN',
         'searchBanks',
         'validateIBAN',
+        'validateRaastId',
       ].sort()
     );
   });
@@ -53,5 +56,13 @@ describe('public API shape', () => {
     // @ts-expect-error deliberate bad input
     expect(api.searchBanks()).toEqual([]);
     expect(api.getBanks()).toBeInstanceOf(Array);
+    // @ts-expect-error deliberate bad input
+    expect(() => api.validateRaastId(null)).not.toThrow();
+    // @ts-expect-error deliberate bad input
+    expect(() => api.maskRaastId(123)).not.toThrow();
+    // @ts-expect-error deliberate bad input
+    expect(() => api.detectIdentifier(undefined)).not.toThrow();
+    // @ts-expect-error deliberate bad input
+    expect(api.maskRaastId(null)).toBe('');
   });
 });
