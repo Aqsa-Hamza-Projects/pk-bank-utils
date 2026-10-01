@@ -14,9 +14,9 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 ### Added
 
 - `detectIdentifier(input)` tells an IBAN, a Raast ID and a bank account
-  number apart, for recipient fields that accept either form — MCB Islamic's
-  Raast FAQ, for instance, says "Enter the recipient's Raast ID (mobile number
-  or IBAN)". It returns a best-guess `kind` plus ranked `candidates`,
+  number apart, for the recipient field State Bank of Pakistan describes:
+  "Specify beneficiary's IBAN or Raast ID (mobile number) on Raast-enabled
+  banks." It returns a best-guess `kind` plus ranked `candidates`,
   each carrying its own `normalized` form — an 11-digit `03` number is both
   a valid Raast ID and a plausible account number, so nothing is lost when
   a caller picks the other reading.
