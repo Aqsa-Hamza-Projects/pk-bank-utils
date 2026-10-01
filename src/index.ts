@@ -15,3 +15,12 @@ export {maskIBAN} from './iban/mask.js';
 export {maskAccountNumber} from './masking/mask-account-number.js';
 export {getBank, getBankFromIBAN} from './banks/lookup.js';
 export {getBanks, searchBanks} from './banks/search.js';
+export type {
+  RaastValidationResult,
+  IdentifierKind,
+  IdentifierCandidate,
+  IdentifierDetection,
+} from './interfaces/index.js';
+export {validateRaastId} from './raast/validate.js';
+export {maskRaastId} from './raast/mask.js';
+export {detectIdentifier} from './detect/identifier.js';

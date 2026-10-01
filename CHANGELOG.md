@@ -11,6 +11,28 @@ grouped into _Added_ / _Changed_ / _Fixed_ / _Removed_.
 
 ## [Unreleased]
 
+### Added
+
+- `detectIdentifier(input)` tells an IBAN, a Raast ID and a bank account
+  number apart, for the recipient field State Bank of Pakistan describes:
+  "Specify beneficiary's IBAN or Raast ID (mobile number) on Raast-enabled
+  banks." It returns a best-guess `kind` plus ranked `candidates`,
+  each carrying its own `normalized` form — an 11-digit `03` number is both
+  a valid Raast ID and a plausible account number, so nothing is lost when
+  a caller picks the other reading.
+- `validateRaastId(input)` validates a Raast ID: a mobile number registered
+  against a bank account for Raast P2P. It accepts every form the same
+  number is pasted in — `0300-1234567`, `+92 300 1234567`, `0092…`, spaces,
+  any kind of dash, Urdu and Arabic-Indic digits, and full-width digits.
+  It reports `allocatedOperator` — the operator the prefix block was
+  allocated to, not the live carrier, since Pakistan has had mobile number
+  portability since 2007 — and `knownPrefix`. Validity is structural: a
+  well-formed number whose prefix is not in the table is still valid, so a
+  new PTA allocation cannot make real numbers fail.
+- `maskRaastId(input)` masks a Raast ID for display as `0300*****67`.
+  Input that is not a well-formed Raast ID is masked conservatively rather
+  than passed through.
+
 ## [0.0.4] — 2026-09-24
 
 ### Added

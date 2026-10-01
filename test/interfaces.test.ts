@@ -4,6 +4,10 @@ import type {Bank, BankType, BankStatus} from '../src/interfaces/index.js';
 import type {
   BankType as PublicBankType,
   BankStatus as PublicBankStatus,
+  RaastValidationResult as PublicRaastValidationResult,
+  IdentifierKind as PublicIdentifierKind,
+  IdentifierCandidate as PublicIdentifierCandidate,
+  IdentifierDetection as PublicIdentifierDetection,
 } from '../src/index.js';
 
 describe('constants', () => {
@@ -19,6 +23,32 @@ describe('package entry', () => {
     const type: PublicBankType = 'microfinance';
     const status: PublicBankStatus = 'active';
     expect([type, status]).toEqual(['microfinance', 'active']);
+  });
+
+  it('exports the Raast and identifier-detection types', () => {
+    // Compile-time check, same reason: these are named in the README and the
+    // CHANGELOG, so they have to be importable from the package root and not
+    // only from the interfaces barrel.
+    const kind: PublicIdentifierKind = 'raast-mobile';
+    const candidate: PublicIdentifierCandidate = {
+      kind: 'account-number',
+      confidence: 'low',
+      normalized: '0000001123456702',
+    };
+    const detection: PublicIdentifierDetection = {
+      kind,
+      normalized: '03001234567',
+      candidates: [candidate],
+    };
+    const raast: PublicRaastValidationResult = {
+      valid: true,
+      normalized: '03001234567',
+      allocatedOperator: 'Jazz',
+      knownPrefix: true,
+    };
+
+    expect(detection.candidates[0]?.normalized).toBe('0000001123456702');
+    expect(raast.allocatedOperator).toBe('Jazz');
   });
 });
 
