@@ -1,7 +1,8 @@
 import {detectIdentifier, validateRaastId, maskRaastId} from '../dist/index.js';
 
-// A Raast recipient field accepts either form: "Enter the recipient's Raast
-// ID (mobile number or IBAN)" — MCB Islamic's Raast FAQ.
+// State Bank of Pakistan's step 2 for sending funds over Raast: "Specify
+// beneficiary's IBAN or Raast ID (mobile number) on Raast-enabled banks."
+// One field, either form.
 const pasted = ['PK36SCBL0000001123456702', '+92 300 1234567', '0300-1234567'];
 
 for (const input of pasted) {

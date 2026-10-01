@@ -247,15 +247,18 @@ maskAccountNumber('0000001123456702');
 
 ### Raast IDs
 
-A **Raast ID** is a Pakistani mobile number linked to a bank account, used to
-send and receive money under the State Bank of Pakistan's Raast instant
-payment scheme: https://www.sbp.org.pk/dfs/Raast-P2P.html
+A **Raast ID** is a Pakistani mobile number linked to a bank account, under the
+State Bank of Pakistan's Raast instant payment system. SBP describes it as
+_"banks will also allow them to create a Raast ID by linking their preferred
+International Bank Account Number (IBAN) with their registered mobile phone
+number"_, and notes that _"Only one Raast ID is allowed per customer and one
+account per Raast ID"_.
 
-Bank documentation states it directly. MCB Islamic's Raast FAQ: _"A Raast ID
-is your mobile number that is linked to your bank account"_ — and, for the
-recipient field, _"Enter the recipient's Raast ID (mobile number or IBAN)"_.
-That one field taking either form is what `detectIdentifier` is for.
-https://www.mcbislamicbank.com/personal/digital-banking/raast-payment-faqs/
+The reason `detectIdentifier` exists is SBP's own step 2 for sending funds:
+_"Specify beneficiary's IBAN or Raast ID (mobile number) on Raast-enabled
+banks."_ One field, either form.
+
+https://www.sbp.org.pk/our-subsidiaries/raast/raast-person-to-person
 
 `validateRaastId` and `maskRaastId` accept the same mobile number shapes a
 user might paste: national (`03001234567`), with `+92`, `0092` or bare `92`
